@@ -28,7 +28,7 @@ const Home = () => {
         </div>
         <div style={{display: 'flex', alignItems:'center'}}>
             <IconButton onClick={()=>{
-              navigate("history")
+              navigate("/history")
             }}>
               <RestoreIcon/>
             </IconButton>
