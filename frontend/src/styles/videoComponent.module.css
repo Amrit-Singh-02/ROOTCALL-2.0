@@ -149,7 +149,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  height: 100vh;
+  height: 95vh;
   width: 350px;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
