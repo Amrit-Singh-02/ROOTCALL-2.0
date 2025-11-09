@@ -40,93 +40,50 @@ const VideoMeet = () => {
   const videoRef = useRef([]);
   let [videos, setVideos] = useState([]);
 
- const getPermissions = async () => {
-  try {
-    // Request both camera and mic in a single call
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
+  const getPermissions = async () => {
+    try {
+      const videoPermission = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+      if (videoPermission) {
+        setVideoAvailable(true);
+      } else {
+        setVideoAvailable(false);
+      }
 
-    // If success, update both permissions as true
-    setVideoAvailable(true);
-    setAudioAvailable(true);
+      const audioPermission = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      if (audioPermission) {
+        setAudioAvailable(true);
+      } else {
+        setAudioAvailable(false);
+      }
 
-    // Check if screen sharing API exists
-    setScreenAvailable(!!navigator.mediaDevices.getDisplayMedia);
+      if (navigator.mediaDevices.getDisplayMedia) {
+        setScreenAvailable(true);
+      } else {
+        setScreenAvailable(false);
+      }
 
-    // Attach stream to local video element
-    window.localStream = stream;
-    if (localVideoRef.current) {
-      localVideoRef.current.srcObject = stream;
+      let userMediaStream;
+      if (videoAvailable || audioAvailable) {
+        userMediaStream = await navigator.mediaDevices.getUserMedia({
+          video: videoAvailable,
+          audio: audioAvailable,
+        });
+      }
+      if (userMediaStream) {
+        window.localStream = userMediaStream;
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = userMediaStream;
+        }
+      }
+    } catch (err) {
+      console.log(err);
     }
-  } catch (err) {
-    console.error("Permission error:", err);
-    setVideoAvailable(false);
-    setAudioAvailable(false);
-  }
-};
+  };
 
-
-  // const getPermissions = async () => {
-  //   try {
-  //     if (
-  //       window.location.protocol !== "https:" &&
-  //       window.location.hostname !== "localhost"
-  //     ) {
-  //       alert("Camera access requires HTTPS on mobile devices");
-  //       return;
-  //     }
-
-  //     const constraints = {
-  //       video: {
-  //         facingMode: "user",
-  //         width: { min: 640, ideal: 1280, max: 1920 },
-  //         height: { min: 480, ideal: 720, max: 1080 },
-  //       },
-  //       audio: {
-  //         echoCancellation: true,
-  //         noiseSuppression: true,
-  //         autoGainControl: true,
-  //       },
-  //     };
-
-  //     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-
-  //     if (stream) {
-  //       setVideoAvailable(true);
-  //       setAudioAvailable(true);
-  //       window.localStream = stream;
-
-  //       if (localVideoRef.current) {
-  //         localVideoRef.current.srcObject = stream;
-  //       }
-  //     }
-
-  //     if (navigator.mediaDevices.getDisplayMedia) {
-  //       setScreenAvailable(true);
-  //     } else {
-  //       setScreenAvailable(false);
-  //     }
-  //   } catch (err) {
-  //     console.error("Permission error:", err);
-
-  //     if (err.name === "NotAllowedError") {
-  //       alert(
-  //         "Camera/microphone access was denied. Please allow permissions and refresh."
-  //       );
-  //     } else if (err.name === "NotFoundError") {
-  //       alert("No camera or microphone found on this device.");
-  //     } else if (err.name === "NotSupportedError" || err.name === "TypeError") {
-  //       alert("Your browser does not support camera access or requires HTTPS.");
-  //     } else {
-  //       alert(`Error accessing camera: ${err.message}`);
-  //     }
-
-  //     setVideoAvailable(false);
-  //     setAudioAvailable(false);
-  //   }
-  // };
 
   useEffect(() => {
     getPermissions();
