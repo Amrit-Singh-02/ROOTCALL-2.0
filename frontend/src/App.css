@@ -1,85 +1,151 @@
+/* ---------------------------
+   Global / Base
+   --------------------------- */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: white; /* fallback */
+}
+
+/* ---------------------------
+   Landing container
+   --------------------------- */
 .landingPageContainer{
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     background: url('/public/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    color: white;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
 }
 
+/* ---------------------------
+   Navigation
+   --------------------------- */
 .landingPageContainer nav{
     padding-inline: 1.2rem;
-    padding-block: 1.6rem;
+    padding-block: 1.0rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
+    z-index: 5;
+    width: 100%;
 }
 
-.landingPageContainer nav h2{
+.landingPageContainer nav .navHeader h2 {
+    margin: 0;
     font-size: 1.8rem;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.2px;
 }
 
 .landingPageContainer nav .navList{
     display: flex;
-    gap: 1.6rem;
+    gap: 1.2rem;
+    align-items: center;
     cursor: pointer;
 }
 
+/* nav list items */
+.landingPageContainer nav .navList p,
+.landingPageContainer nav .navList div {
+  margin: 0;
+  padding: 0.45rem 0.7rem;
+  border-radius: 8px;
+  transition: background-color .18s ease, transform .12s ease;
+  user-select: none;
+  color: #fff;
+}
+.landingPageContainer nav .navList p:hover,
+.landingPageContainer nav .navList div:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+
+/* Login as button (visual emphasis) */
+.landingPageContainer nav .navList div[role="button"] {
+  background: #FF9839;
+  color: #fff;
+  padding: 0.5rem 0.95rem;
+  font-weight: 600;
+}
+
+/* ---------------------------
+   Main section
+   --------------------------- */
 .landingMainContainer {
     display: flex;
     justify-content: space-between;
     padding-inline: 3rem;
-    height: 70vh;
+    height: calc(100vh - 80px);
     align-items: center;
+    gap: 2rem;
 }
 
+/* Left column */
 .landingMainContainer > div:nth-child(1){
     font-size: 2rem ;
+    max-width: 760px;
 }
 
-/* .landingMainContainer > div:nth-child(1) div[role="button"]{
-    background-color: #FF9839;
-    width: fit-content;
-} */
+.landingMainContainer > div:nth-child(1) h1 {
+  margin: 0 0 0.6rem 0;
+  font-size: 2.4rem;
+  line-height: 1.05;
+}
+.landingMainContainer > div:nth-child(1) p {
+  margin: 0;
+  opacity: 0.92;
+  font-size: 1.05rem;
+}
 
+/* CTA button */
 .startBtn{
     background-color: #FF9839;
     width: fit-content;
-    padding: 1rem;
+    padding: 0.9rem 1.05rem;
     border-radius: 20px;
     margin-top: 1.47rem;
-    display: flex;
+    display: inline-flex;
+    align-items: center;
 }
-
 .landingMainContainer > div:nth-child(1) a{
     text-decoration: none;
-    font-size: 1.7rem;
+    font-size: 1.2rem;
     font-weight: 900;
     color: white;
-    
+    display: inline-block;
 }
 
+/* Right column image */
+.landingMainContainer > div:nth-child(2) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .landingMainContainer > div:nth-child(2) img{
     height: 75vh;
     width: auto;
+    max-width: 520px;
 }
 
-/* .navBar{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-inline: 20px;
-    text-align: center;
-
-} */
- .navBar {
+/* ---------------------------
+   Additional components (kept from your css)
+   --------------------------- */
+.navBar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 30px;  /* Better padding */
-    background-color: #f5f5f5;  /* Optional background */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);  /* Optional shadow */
+    padding: 15px 30px;
+    background-color: transparent;
+    box-shadow: none;
 }
 
 .navBar h2 {
@@ -87,14 +153,12 @@
     font-size: 24px;
 }
 
-/* Right side container */
 .navBar > div:last-child {
     display: flex;
     align-items: center;
-    gap: 20px;  /* Space between elements */
+    gap: 20px;
 }
 
-/* History section (icon + text) */
 .navBar > div:last-child > :not(button) {
     display: flex;
     align-items: center;
@@ -102,7 +166,6 @@
     cursor: pointer;
 }
 
-/* Logout button styling */
 .navBar button {
     padding: 8px 20px;
     background-color: #fd8515;
@@ -142,3 +205,111 @@
         height: auto;
         border-radius: 20px;
 }
+
+/* ---------------------------
+   Responsive: Tablets and below
+   --------------------------- */
+@media (max-width: 1024px) {
+  .landingMainContainer {
+    padding-inline: 2rem;
+    gap: 1.2rem;
+    height: auto;
+    align-items: flex-start;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) h1 {
+    font-size: 2rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) img {
+    height: 56vh;
+    max-width: 420px;
+  }
+}
+
+/* ---------------------------
+   Responsive: Mobile phones
+   --------------------------- */
+@media (max-width: 600px) {
+  .landingPageContainer nav{
+    padding-inline: 1rem;
+    padding-block: .8rem;
+    align-items: flex-start;
+  }
+
+  /* Stack nav: title left, menu collapsed on right */
+  .landingPageContainer nav {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: .6rem;
+  }
+
+  .landingMainContainer {
+    flex-direction: column;
+    padding-inline: 1rem;
+    height: auto;
+    padding-top: 1.4rem;
+    padding-bottom: 2rem;
+    gap: 1.2rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    width: 100%;
+    font-size: 1.05rem;
+    text-align: left;
+  }
+
+  .landingMainContainer > div:nth-child(1) h1 {
+    font-size: 1.6rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) p {
+    font-size: 0.95rem;
+  }
+
+  .startBtn {
+    padding: 0.7rem 0.9rem;
+    border-radius: 14px;
+  }
+
+  .landingMainContainer > div:nth-child(2) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) img{
+    height: 46vh;
+    max-width: 320px;
+    width: auto;
+  }
+
+  .landingPageContainer nav .navList {
+    gap: 0.6rem;
+  }
+
+  .landingPageContainer nav .navList p,
+  .landingPageContainer nav .navList div {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* ---------------------------
+   Small tweaks & accessibility
+   --------------------------- */
+a, button { outline: none; }
+a:focus, button:focus, .startBtn:focus { box-shadow: 0 0 0 3px rgba(255,152,57,0.18); }
+img { display: block; max-width: 100%; height: auto; }
+
+.navLogo {
+  height: 45px;
+  width: 200px;
+  border-radius: 8px;
+  object-fit: contain;
+  cursor: pointer;
+}
+

@@ -1,73 +1,410 @@
-.meetVideoContainer{
-    position: relative;
-    height: 100vh;
-    background: rgb(19, 1, 41);
+.meetVideoContainer {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #e19522 0%, #e1d4a5 100%);
+  overflow: hidden;
 }
 
 .videoWrapper {
-    position: absolute;
-    bottom: 10vh;
-    left: 0;
-    height: 20vh;
-    width: auto;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 200px;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 3px solid #fff;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.videoWrapper:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.meetUserVideo {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Control Buttons */
+.buttonContainers {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  z-index: 200;
+}
+
+.buttonContainers svg {
+  font-size: 2rem;
+}
+
+/* Remote Videos Container */
+.conferenceView {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* 1 person: Full screen */
+.conferenceView:has(> div:only-child) {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+/* 2 people: Side by side */
+.conferenceView:has(> div:nth-child(2):last-child) {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+/* 3 people: 2 on top, 1 centered on bottom spanning full width */
+.conferenceView:has(> div:nth-child(3):last-child) {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.conferenceView:has(> div:nth-child(3):last-child) > div:nth-child(3) {
+  grid-column: 1 / 3;
+  max-width: 50%;
+  margin: 0 auto;
+}
+
+/* 4 people: 2x2 grid */
+.conferenceView:has(> div:nth-child(4):last-child) {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* 5 people: 2 on first row, 3 on second row */
+.conferenceView:has(> div:nth-child(5):last-child) {
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 1fr 1fr;
+}
+
+.conferenceView:has(> div:nth-child(5):last-child) > div:nth-child(1) {
+  grid-column: 1 / 4;
+}
+
+.conferenceView:has(> div:nth-child(5):last-child) > div:nth-child(2) {
+  grid-column: 4 / 7;
+}
+
+.conferenceView:has(> div:nth-child(5):last-child) > div:nth-child(3) {
+  grid-column: 1 / 3;
+}
+
+.conferenceView:has(> div:nth-child(5):last-child) > div:nth-child(4) {
+  grid-column: 3 / 5;
+}
+
+.conferenceView:has(> div:nth-child(5):last-child) > div:nth-child(5) {
+  grid-column: 5 / 7;
+}
+
+/* 6 people: 2x3 grid */
+.conferenceView:has(> div:nth-child(6):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+/* 7+ people: 3x3 grid */
+.conferenceView:has(> div:nth-child(7)) {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+/* Video styling */
+.conferenceView > div {
+  position: relative;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.conferenceView video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Chat Room - Desktop */
+.chatRoom {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 350px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+  z-index: 150;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.chatContainer {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.chatContainer h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 10px;
+}
+
+.chattingDisplay {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding-right: 10px;
+}
+
+.chattingDisplay::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chattingDisplay::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 3px;
+}
+
+.chattingArea {
+  display: flex;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.chattingArea input {
+  flex: 1;
+}
+
+/* Lobby Screen */
+.lobbyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #e19522 0%, #e1d4a5 100%);
+}
+
+.lobbyContainer h2 {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.lobbyContainer video {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  margin: 20px 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .videoWrapper {
+    width: 120px;
+    height: 90px;
+    bottom: 100px;
+    left: 10px;
+  }
+
+  .buttonContainers {
+    padding: 15px 10px;
+    z-index: 300;
+  }
+
+  .buttonContainers svg {
+    font-size: 1.5rem;
+  }
+
+  /* iOS-style Glassmorphism Chat for Mobile */
+  .chatRoom {
+    width: calc(100% - 20px);
+    height: auto;
+    max-height: calc(100vh - 180px);
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    bottom: auto;
     border-radius: 20px;
-    overflow: hidden; /* This is the key! */
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    animation: slideUp 0.3s ease;
+  }
+
+  .chatContainer {
+    padding: 15px;
+    height: auto;
+    max-height: calc(100vh - 200px);
+  }
+
+  .chatContainer h1 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: rgba(0, 0, 0, 0.85);
+    border-bottom: 2px solid rgba(102, 126, 234, 0.6);
+  }
+
+  .chattingDisplay {
+    max-height: calc(100vh - 360px);
+    margin-bottom: 15px;
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 500;
+  }
+
+  .chattingDisplay p {
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .chattingArea {
+    flex-direction: row;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .chattingArea input {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+  }
+
+  .conferenceView {
+    padding: 5px;
+    gap: 5px;
+  }
+
+  /* 1 person mobile */
+  .conferenceView:has(> div:only-child) {
+    grid-template-columns: 1fr;
+  }
+
+  /* 2 people mobile: stack vertically */
+  .conferenceView:has(> div:nth-child(2):last-child) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  /* 3 people mobile */
+  .conferenceView:has(> div:nth-child(3):last-child) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .conferenceView:has(> div:nth-child(3):last-child) > div:nth-child(3) {
+    grid-column: 1 / 3;
+    max-width: 100%;
+  }
+
+  /* 4 people mobile: 2x2 */
+  .conferenceView:has(> div:nth-child(4):last-child) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  /* 5+ people mobile: 2 columns */
+  .conferenceView:has(> div:nth-child(5)) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
 }
 
-.meetUserVideo{
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    display: block;
+@media (max-width: 480px) {
+  .videoWrapper {
+    width: 100px;
+    height: 75px;
+    bottom: 90px;
+    left: 5px;
+  }
+
+  .chatRoom {
+    max-height: calc(100vh - 160px);
+  }
+
+  .chatContainer {
+    padding: 12px;
+  }
+
+  .chatContainer h1 {
+    font-size: 18px;
+  }
+
+  .chattingDisplay {
+    max-height: calc(100vh - 320px);
+  }
 }
 
-.buttonContainers{
-    position: absolute;
-    width: 100vw;
-    bottom: 0;
-    text-align: center;
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .videoWrapper {
+    width: 180px;
+    height: 135px;
+  }
+
+  .chatRoom {
+    width: 300px;
+  }
 }
 
-.buttonContainers  svg{
-    font-size: 2.5rem;
+/* Hover effects for videos */
+.conferenceView > div:hover {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+  z-index: 10;
 }
 
-.conferenceView{
-    display: flex;
-    padding: 10px;
-    gap: 10px;
-}
-
-.conferenceView > video{
-    width:  40vw;
-    height: 20vh;
-    min-width: 30vw;
-    border-radius: 10px;
-}
-
-.chatRoom{
-    position: absolute;
-    right: 0;
-    height: 90vh;
-    width: 30vw;
-    background: white;
-    border-radius: 10px;
-    padding-inline: 20px;
-}
-
-.chatContainer{
-    position: relative;
-    height: 100%;
-}
-
-.chattingArea{
-    position: absolute;
-    bottom: 0;
-    display: flex;
-    gap: 11px;
-    padding-bottom: 11px;
-}
-
-.chattingDisplay{
-    
+/* Loading/Empty state */
+.conferenceView:empty::before {
+  content: "Waiting for participants...";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  height: 100%;
 }

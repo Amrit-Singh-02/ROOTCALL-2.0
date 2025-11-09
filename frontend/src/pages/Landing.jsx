@@ -11,7 +11,8 @@ const LandingPage = () => {
     <div className="landingPageContainer">
       <nav>
         <div className="navHeader">
-          <h2>Root Call</h2>
+          {/* <h2>Root Call</h2> */}
+              <img src="/logoR.png" alt="Root Call Logo" className="navLogo" />
         </div>
         <div className="navList">
           <p onClick={()=>{

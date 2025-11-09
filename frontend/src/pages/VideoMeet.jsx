@@ -30,7 +30,7 @@ const VideoMeet = () => {
   let [video, setVideo] = useState(false);
   let [audio, setAudio] = useState(false);
   let [screen, setScreen] = useState();
-  let [showModel, setShowModel] = useState(true);
+  let [showModel, setShowModel] = useState(false); // Changed to false by default
   let [screenAvailable, setScreenAvailable] = useState();
   let [messages, setMessages] = useState([]);
   let [message, setMessage] = useState("");
@@ -83,7 +83,6 @@ const VideoMeet = () => {
       console.log(err);
     }
   };
-
 
   useEffect(() => {
     getPermissions();
@@ -467,6 +466,7 @@ const VideoMeet = () => {
       getDisplayMedia();
     }
   }, [screen]);
+  
   let handleScreen = () => {
     setScreen(!screen);
   };
@@ -485,66 +485,63 @@ const VideoMeet = () => {
     routeTo("/home");
   };
 
+  let handleChatToggle = () => {
+    setShowModel(!showModel);
+    if (showModel) {
+      setNewMessages(0); // Reset new messages count when opening chat
+    }
+  };
+
   return (
     <div>
       {askForUsername === true ? (
-        <div>
+        <div className={styles.lobbyContainer}>
           <h2>Enter into Lobby</h2>
           <TextField
             id="outlined-basic"
-            label="username"
+            label="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             variant="outlined"
           />
-          <Button variant="contained" onClick={connect}>
+          <Button variant="contained" onClick={connect} style={{ marginTop: '20px' }}>
             Connect
           </Button>
 
-          <div>
-            <video ref={localVideoRef} autoPlay muted></video>
-          </div>
+          <video ref={localVideoRef} autoPlay muted></video>
         </div>
       ) : (
         <div className={styles.meetVideoContainer}>
-          {showModel ? (
-            <div className={styles.chatRoom}>
-              <div className={styles.chatContainer}>
-                <h1>Chat</h1>
-                <div className={styles.chattingDisplay}>
-                  {messages.length > 0 ? (
-                    messages.map((item, index) => {
-                      return (
-                        <div key={index} style={{ marginBottom: "20px" }}>
-                          <p style={{ fontWeight: "bold" }}>{item.sender}</p>
-                          <p>{item.data}</p>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <>
-                      <p>No messages yet</p>
-                    </>
-                  )}
-                </div>
-                <div className={styles.chattingArea}>
-                  <TextField
-                    id="outlined-basic"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    label="Enter your chat"
-                    variant="outlined"
-                  />
-                  <Button variant="contained" onClick={sendMessage}>
-                    send
-                  </Button>
-                </div>
+          {/* Conference View - Remote Videos */}
+          <div className={styles.conferenceView}>
+            {videos.map((video) => (
+              <div key={video.socketId}>
+                <video
+                  data-socket={video.socketId}
+                  ref={(ref) => {
+                    if (ref && video.stream) {
+                      ref.srcObject = video.stream;
+                    }
+                  }}
+                  autoPlay
+                  playsInline
+                ></video>
               </div>
-            </div>
-          ) : (
-            <></>
-          )}
+            ))}
+          </div>
 
+          {/* Local Video (Picture-in-Picture) */}
+          <div className={styles.videoWrapper}>
+            <video
+              className={styles.meetUserVideo}
+              ref={localVideoRef}
+              autoPlay
+              muted
+              playsInline
+            ></video>
+          </div>
+
+          {/* Control Buttons */}
           <div className={styles.buttonContainers}>
             <IconButton onClick={handleVideo} style={{ color: "white" }}>
               {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
@@ -563,13 +560,11 @@ const VideoMeet = () => {
                   <StopScreenShareIcon />
                 )}
               </IconButton>
-            ) : (
-              <></>
-            )}
+            ) : null}
 
             <Badge badgeContent={newMessages} max={999} color="secondary">
               <IconButton
-                onClick={() => setShowModel(!showModel)}
+                onClick={handleChatToggle}
                 style={{ color: "white" }}
               >
                 <ChatIcon />
@@ -577,37 +572,40 @@ const VideoMeet = () => {
             </Badge>
           </div>
 
-          {/* <h2>Connected - Room Active</h2> */}
-          <div className={styles.videoWrapper}>
-            <video
-              className={styles.meetUserVideo}
-              ref={localVideoRef}
-              autoPlay
-              muted
-              playsInline
-              style={{ width: "300px" }}
-            ></video>
-          </div>
-          <div>
-            <div className={styles.conferenceView}>
-              {videos.map((video) => (
-                <div key={video.socketId}>
-                  {/* <h2>{video.socketId}</h2> */}
-                  <video
-                    data-socket={video.socketId}
-                    ref={(ref) => {
-                      if (ref && video.stream) {
-                        ref.srcObject = video.stream;
-                      }
-                    }}
-                    autoPlay
-                    playsInline
-                    style={{ width: "300px" }}
-                  ></video>
+          {/* Chat Room */}
+          {showModel && (
+            <div className={styles.chatRoom}>
+              <div className={styles.chatContainer}>
+                <h1>Chat</h1>
+                <div className={styles.chattingDisplay}>
+                  {messages.length > 0 ? (
+                    messages.map((item, index) => {
+                      return (
+                        <div key={index} style={{ marginBottom: "20px" }}>
+                          <p style={{ fontWeight: "bold" }}>{item.sender}</p>
+                          <p>{item.data}</p>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p>No messages yet</p>
+                  )}
                 </div>
-              ))}
+                <div className={styles.chattingArea}>
+                  <TextField
+                    id="outlined-basic"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    label="Enter your chat"
+                    variant="outlined"
+                  />
+                  <Button variant="contained" onClick={sendMessage}>
+                    SEND
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>
