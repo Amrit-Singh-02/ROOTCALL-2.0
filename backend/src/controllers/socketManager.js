@@ -6,11 +6,13 @@ let timeOnLine = {}
 
 export const connectToSocket = (server)=>{
     const io = new Server(server, {
-        cors : { //! Don't do this in production level, allowing request from everywhere
-            origin : "*",
-            methods : ["GET", "POST"],
-            allowedHeaders : ['*'],
-            credentials : true
+        cors : {
+            origin: [
+                'https://rootcall-frontend.onrender.com',
+                'http://localhost:3000'
+            ],
+            methods: ["GET", "POST"],
+            credentials: true
         }
     });
 
