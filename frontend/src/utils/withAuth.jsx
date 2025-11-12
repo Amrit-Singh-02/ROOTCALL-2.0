@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import server from "../enviroment";
+
+// ✅ Get backend URL from environment variable
+const server = process.env.BACKEND_URL || "http://localhost:8000";
 
 const withAuth = (WrappedComponent) => {
   const AuthComponent = (props) => {
@@ -20,7 +22,7 @@ const withAuth = (WrappedComponent) => {
             setIsAuthenticated(true);
           }
         } catch (error) {
-          console.log("Not authenticated");
+          console.log("Not authenticated, redirecting to /auth");
           router('/auth');
         } finally {
           setIsChecking(false);

@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Button, IconButton, TextField } from "@mui/material";
 import RestoreIcon from "@mui/icons-material/Restore";
 import axios from "axios";
-import server from "../enviroment";
 import "../App.css";
 import { AuthContext } from "../contexts/AuthContext";
+
+// ✅ Get backend URL from environment variable
+const server = process.env.BACKEND_URL || "http://localhost:8000";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -18,7 +20,6 @@ const Home = () => {
     navigate(`/${meetingCode}`);
   };
 
-  // ✅ FIXED: Proper logout function
   const logout = async () => {
     try {
       await axios.post(`${server}/api/v1/users/logout`, {}, {
@@ -27,7 +28,6 @@ const Home = () => {
       navigate('/auth');
     } catch (error) {
       console.error('Logout failed:', error);
-      // Redirect anyway
       navigate('/auth');
     }
   };
@@ -37,7 +37,7 @@ const Home = () => {
       <div className="navBar">
         <div style={{ display: "flex", alignItems: "center" }}>
           <img
-            src="/logoB.png"
+            src="/logoR.png"
             onClick={() => navigate("/")}
             style={{ cursor: "pointer" }}
             alt="Root Call Logo"

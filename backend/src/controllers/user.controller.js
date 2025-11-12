@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"; // ✅ ADD THIS IMPORT
+import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { Meeting } from "../models/meeting.model.js";
 
@@ -28,14 +28,25 @@ const login = async (req, res) => {
         { expiresIn: "1d" }
       );
 
-      res.cookie("token", token, {
+      // ✅ DYNAMIC COOKIE SETTINGS based on NODE_ENV
+      const isProduction = process.env.NODE_ENV === "production";
+      
+      const cookieOptions = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        secure: isProduction,                    // true in prod, false in dev
+        sameSite: isProduction ? "none" : "lax", // "none" in prod, "lax" in dev
         maxAge: 1 * 24 * 60 * 60 * 1000,
-      });
+      };
 
-      // ✅ CHANGED: Don't return token in response
+      // Only add domain in production
+      if (isProduction) {
+        cookieOptions.domain = ".onrender.com";
+      }
+
+      res.cookie("token", token, cookieOptions);
+
+      console.log(`✅ Login successful for user: ${username} (${isProduction ? 'PRODUCTION' : 'DEVELOPMENT'})`);
+
       return res.status(httpStatus.OK).json({ 
         message: "Login successful",
         username: user.username,
@@ -76,10 +87,9 @@ const register = async (req, res) => {
   }
 };
 
-// ✅ CHANGED: Use req.myUser from middleware
 const getUserHistory = async (req, res) => {
   try {
-    const user = req.myUser; // From verifyToken middleware
+    const user = req.myUser;
     const meetings = await Meeting.find({ user_id: user.username });
     res.json(meetings);
   } catch (e) {
@@ -87,11 +97,10 @@ const getUserHistory = async (req, res) => {
   }
 };
 
-// ✅ CHANGED: Use req.myUser from middleware
 const addToHistory = async (req, res) => {
   const { meeting_code } = req.body;
   try {
-    const user = req.myUser; // From verifyToken middleware
+    const user = req.myUser;
     const newMeeting = new Meeting({
       user_id: user.username,
       meetingCode: meeting_code,
@@ -103,7 +112,6 @@ const addToHistory = async (req, res) => {
   }
 };
 
-// ✅ ADD THIS NEW FUNCTION
 const verifyUser = async (req, res) => {
   try {
     return res.status(200).json({ 
@@ -118,15 +126,22 @@ const verifyUser = async (req, res) => {
   }
 };
 
-// ✅ ADD THIS NEW FUNCTION
 const logout = async (req, res) => {
-  res.clearCookie("token", {
+  // ✅ DYNAMIC COOKIE CLEARING based on NODE_ENV
+  const isProduction = process.env.NODE_ENV === "production";
+  
+  const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-  });
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+  };
+
+  if (isProduction) {
+    cookieOptions.domain = ".onrender.com";
+  }
+
+  res.clearCookie("token", cookieOptions);
   return res.status(200).json({ message: "Logged out successfully" });
 };
 
-// ✅ UPDATED EXPORT
 export { login, register, getUserHistory, addToHistory, verifyUser, logout };

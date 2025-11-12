@@ -11,9 +11,9 @@ import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
 import ChatIcon from "@mui/icons-material/Chat";
 import styles from "../styles/videoComponent.module.css";
 import { useNavigate } from "react-router-dom";
-import server from "../enviroment";
+// import server from "../enviroment";
 
-const server_url = server;
+const server_url = process.env.BACKEND_URL || "https://rootcall-backend.onrender.com";
 var connections = {};
 
 const peerConfigConnections = {

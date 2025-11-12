@@ -1,14 +1,17 @@
 import axios, { HttpStatusCode } from "axios";
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import server from "../enviroment";
+
+// ✅ Get backend URL from environment variable
+const server = process.env.BACKEND_URL || "http://localhost:8000";
+
+
 
 export const AuthContext = createContext({});
 
-// ✅ ADD withCredentials to axios client
 const client = axios.create({
   baseURL: `${server}/api/v1/users/`,
-  withCredentials: true, // ✅ CRITICAL: Send cookies with every request
+  withCredentials: true, // Send cookies with requests
 });
 
 export const AuthProvider = ({ children }) => {
@@ -40,8 +43,6 @@ export const AuthProvider = ({ children }) => {
       });
       
       if (request.status === HttpStatusCode.Ok) {
-        // ✅ REMOVED: Don't store token in localStorage
-        // Token is automatically stored in httpOnly cookie
         router("/home");
         return request.data; 
       }
@@ -50,7 +51,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ CHANGED: GET request, no token in body
   const getHistoryOfUser = async () => {
     try {
       let request = await client.get("/get_all_activity");
@@ -60,7 +60,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ CHANGED: No token in body
   const addToUserHistory = async (meetingCode) => {
     try {
       let request = await client.post("/add_to_activity", {
