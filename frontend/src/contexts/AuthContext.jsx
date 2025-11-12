@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // ✅ Get backend URL from environment variable
-const server = process.env.BACKEND_URL || "http://localhost:8000";
+const server = process.env.REACT_APP_BACKEND_UR || "http://localhost:8000";
 
 
 
