@@ -5,15 +5,15 @@ import server from "../enviroment";
 
 export const AuthContext = createContext({});
 
+// ✅ ADD withCredentials to axios client
 const client = axios.create({
   baseURL: `${server}/api/v1/users/`,
+  withCredentials: true, // ✅ CRITICAL: Send cookies with every request
 });
 
 export const AuthProvider = ({ children }) => {
   const authContext = useContext(AuthContext);
-
   const [userData, setUserData] = useState(authContext);
-
   const router = useNavigate();
 
   const handleRegister = async (name, username, password) => {
@@ -38,50 +38,32 @@ export const AuthProvider = ({ children }) => {
         username: username,
         password: password,
       });
-      console.log(request.status);
+      
       if (request.status === HttpStatusCode.Ok) {
-        console.log(request.data.token);
-        localStorage.setItem("token", request.data.token);
+        // ✅ REMOVED: Don't store token in localStorage
+        // Token is automatically stored in httpOnly cookie
         router("/home");
-        return request.data;
+        return request.data; 
       }
     } catch (err) {
       throw err;
     }
   };
 
-  const getHistoryOfUser = async()=>{
-      try{
-          let request = await client.post("/get_all_activity",
-              {
-                  token : localStorage.getItem("token")
-              }
-          );
-          return request.data
-      }catch(err){
-          throw err
-      }
-  }
-  // const getHistoryOfUser = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     if (!token) return { message: "No token found" };
+  // ✅ CHANGED: GET request, no token in body
+  const getHistoryOfUser = async () => {
+    try {
+      let request = await client.get("/get_all_activity");
+      return request.data;
+    } catch (err) {
+      throw err;
+    }
+  };
 
-  //     const request = await client.get("/get_all_activity", {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-  //     return request.data;
-  //   } catch (err) {
-  //     console.error("getHistoryOfUser error:", err);
-  //     // normalize error shape
-  //     return err.response?.data ?? { message: err.message };
-  //   }
-  // };
-
+  // ✅ CHANGED: No token in body
   const addToUserHistory = async (meetingCode) => {
     try {
       let request = await client.post("/add_to_activity", {
-        token: localStorage.getItem("token"),
         meeting_code: meetingCode,
       });
       return request;
@@ -98,5 +80,6 @@ export const AuthProvider = ({ children }) => {
     handleRegister,
     handleLogin,
   };
+  
   return <AuthContext.Provider value={data}>{children}</AuthContext.Provider>;
 };

@@ -1,62 +1,83 @@
-import React, { useContext, useState } from 'react'
-import withAuth from '../utils/withAuth'
-import { useNavigate } from 'react-router-dom'
-import { Button, IconButton, TextField } from '@mui/material'
-import RestoreIcon from '@mui/icons-material/Restore'
-import '../App.css'
-import { AuthContext } from '../contexts/AuthContext'
-
-
+import React, { useContext, useState } from "react";
+import withAuth from "../utils/withAuth";
+import { useNavigate } from "react-router-dom";
+import { Button, IconButton, TextField } from "@mui/material";
+import RestoreIcon from "@mui/icons-material/Restore";
+import axios from "axios";
+import server from "../enviroment";
+import "../App.css";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const [meetingCode, setMeetingCode] = useState("");
+  const { addToUserHistory } = useContext(AuthContext);
 
-    const navigate = useNavigate()
-    const [meetingCode, setMeetingCode] = useState("");
+  const handleJoinVideoCall = async () => {
+    await addToUserHistory(meetingCode);
+    navigate(`/${meetingCode}`);
+  };
 
-    const {addToUserHistory} = useContext(AuthContext);
-    const handleJoinVideoCall = async()=>{
-        await  addToUserHistory(meetingCode)
-        navigate(`/${meetingCode}`)
+  // ✅ FIXED: Proper logout function
+  const logout = async () => {
+    try {
+      await axios.post(`${server}/api/v1/users/logout`, {}, {
+        withCredentials: true
+      });
+      navigate('/auth');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Redirect anyway
+      navigate('/auth');
     }
+  };
 
-    return (
+  return (
     <>
-    
-    <div className="navBar">
-        <div style={{display:'flex', alignItems:'center'}}>
-            <h2 onClick={()=>{navigate("/")}} style={{cursor:"pointer"}}>Root Call</h2>
+      <div className="navBar">
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src="/logoB.png"
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer" }}
+            alt="Root Call Logo"
+            className="navLogo"
+          />
         </div>
-        <div style={{display: 'flex', alignItems:'center'}}>
-            <IconButton onClick={()=>{
-              navigate("/history")
-            }}>
-              <RestoreIcon/>
-            </IconButton>
-              <p>History</p>
-            <button onClick={()=>{
-              localStorage.removeItem("token")
-              navigate("/auth")
-            }}>
-              Logout
-            </button>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <IconButton onClick={() => navigate("/history")}>
+            <RestoreIcon />
+          </IconButton>
+          <p>History</p>
+          <Button variant="outlined" onClick={logout}>
+            Logout
+          </Button>
         </div>
-    </div>
-    <div className="meetContainer">
-      <div className="leftPannel">
-        <div>
-          <h2 style={{marginBottom:"25px"}}>Providing Quality video call </h2>
-          <div style={{display: 'flex', gap:"10px"}}>
-              <TextField onChange={e => setMeetingCode(e.target.value)}></TextField>
-              <Button onClick={handleJoinVideoCall} variant='contained'>Join</Button>
+      </div>
+      <div className="meetContainer">
+        <div className="leftPannel">
+          <div>
+            <h2 style={{ marginBottom: "25px" }}>
+              Providing Quality video call{" "}
+            </h2>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <TextField
+                onChange={(e) => setMeetingCode(e.target.value)}
+                value={meetingCode}
+                placeholder="Enter meeting code"
+              />
+              <Button onClick={handleJoinVideoCall} variant="contained">
+                Join
+              </Button>
+            </div>
           </div>
         </div>
+        <div className="rightPannel">
+          <img src="/VCimage.png" alt="vc image" />
+        </div>
       </div>
-      <div className="rightPannel">
-        <img src="/VCimage.png" alt="vc image" />
-      </div>
-    </div>
     </>
-  )
-}
+  );
+};
 
-export default withAuth(Home)
+export default withAuth(Home);

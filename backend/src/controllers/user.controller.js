@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import { User } from "../models/user.model.js";
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"; // ✅ ADD THIS IMPORT
 import crypto from "crypto";
 import { Meeting } from "../models/meeting.model.js";
 
@@ -19,11 +20,27 @@ const login = async (req, res) => {
     }
 
     let isPasswordCorrect = await bcrypt.compare(password, user.password);
+
     if (isPasswordCorrect) {
-      let token = crypto.randomBytes(20).toString("hex");
-      user.token = token;
-      await user.save();
-      return res.status(httpStatus.OK).json({ token: token });
+      const token = jwt.sign(
+        { userId: user._id, username: user.username },
+        process.env.JWT_SECRET || "your-secret-key",
+        { expiresIn: "1d" }
+      );
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        maxAge: 1 * 24 * 60 * 60 * 1000,
+      });
+
+      // ✅ CHANGED: Don't return token in response
+      return res.status(httpStatus.OK).json({ 
+        message: "Login successful",
+        username: user.username,
+        name: user.name
+      });
     } else {
       return res
         .status(httpStatus.UNAUTHORIZED)
@@ -59,42 +76,22 @@ const register = async (req, res) => {
   }
 };
 
-const getUserHistory = async(req, res)=>{
-
-    const  {token} = req.body;
-    try{
-        const user = await User.findOne({token : token})
-        const meeting = await Meeting.find({user_id: user.username})
-        res.json(meeting)
-    }catch(e){
-        res.json({message:`Something went wrong ${e}`})
-    }
-}
-
-// const getUserHistory = async (req, res) => {
-//   try {
-//     const authHeader = req.headers.authorization || "";
-//     console.log("headers:", req.headers);
-//     console.log("query:", req.query);
-//     console.log("body:", req.body);
-//     const token = authHeader.split(" ")[1];
-//     if (!token) return res.status(401).json({ message: "Token missing" });
-
-//     const user = await User.findOne({ token });
-//     if (!user) return res.status(404).json({ message: "User not found" });
-
-//     const meetings = await Meeting.find({ user_id: user.username });
-//     return res.status(200).json(meetings);
-//   } catch (e) {
-//     console.error("getUserHistory error:", e);
-//     return res.status(500).json({ message: `Something went wrong ${e}` });
-//   }
-// };
-
-const addToHistory = async (req, res) => {
-  const { token, meeting_code } = req.body;
+// ✅ CHANGED: Use req.myUser from middleware
+const getUserHistory = async (req, res) => {
   try {
-    const user = await User.findOne({ token });
+    const user = req.myUser; // From verifyToken middleware
+    const meetings = await Meeting.find({ user_id: user.username });
+    res.json(meetings);
+  } catch (e) {
+    res.status(500).json({ message: `Something went wrong ${e}` });
+  }
+};
+
+// ✅ CHANGED: Use req.myUser from middleware
+const addToHistory = async (req, res) => {
+  const { meeting_code } = req.body;
+  try {
+    const user = req.myUser; // From verifyToken middleware
     const newMeeting = new Meeting({
       user_id: user.username,
       meetingCode: meeting_code,
@@ -102,8 +99,34 @@ const addToHistory = async (req, res) => {
     await newMeeting.save();
     res.status(httpStatus.CREATED).json({ message: "Added code to history" });
   } catch (e) {
-    res.json({ message: `Something went wrong ${e}` });
+    res.status(500).json({ message: `Something went wrong ${e}` });
   }
 };
 
-export { login, register, getUserHistory, addToHistory };
+// ✅ ADD THIS NEW FUNCTION
+const verifyUser = async (req, res) => {
+  try {
+    return res.status(200).json({ 
+      message: "Authenticated",
+      user: {
+        username: req.myUser.username,
+        name: req.myUser.name
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Verification failed" });
+  }
+};
+
+// ✅ ADD THIS NEW FUNCTION
+const logout = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+  });
+  return res.status(200).json({ message: "Logged out successfully" });
+};
+
+// ✅ UPDATED EXPORT
+export { login, register, getUserHistory, addToHistory, verifyUser, logout };

@@ -22,7 +22,7 @@ const LandingPage = () => {
             router("/auth")
           }}>Register</p>
           <div onClick={()=>{
-            router("/auth")
+            router("/home")
           }} role="button">Login</div>
         </div>
       </nav>
@@ -35,7 +35,7 @@ const LandingPage = () => {
           </h1>
           <p>Cover a distance by Root Call</p>
           <div role="button " className="startBtn">
-            <Link to='/auth'>Get Started</Link>
+            <Link to='/home'>Get Started</Link>
           </div>
         </div>
         <div>

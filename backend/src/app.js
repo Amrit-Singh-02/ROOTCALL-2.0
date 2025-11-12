@@ -5,19 +5,22 @@ import mongoose from "mongoose";
 import cors from "cors";
 import { connectToSocket } from "./controllers/socketManager.js";
 import userRoutes from './routes/users.routes.js'
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const server = createServer(app);
 const io = connectToSocket(server);
 
 app.set("port", process.env.PORT || 8000);
+app.use(cookieParser())
 app.use(cors({
     origin: [
         'https://rootcall-frontend.onrender.com',
         'http://localhost:3000'
     ],
     methods: ["GET", "POST"],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json({limit:"40kb"}));
 app.use(express.urlencoded({limit:"40kb", extended:true}));

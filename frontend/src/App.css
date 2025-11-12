@@ -115,6 +115,7 @@ body {
     margin-top: 1.47rem;
     display: inline-flex;
     align-items: center;
+    cursor: pointer;
 }
 .landingMainContainer > div:nth-child(1) a{
     text-decoration: none;
@@ -307,7 +308,7 @@ img { display: block; max-width: 100%; height: auto; }
 
 .navLogo {
   height: 45px;
-  width: 200px;
+  width: 290px;
   border-radius: 8px;
   object-fit: contain;
   cursor: pointer;
