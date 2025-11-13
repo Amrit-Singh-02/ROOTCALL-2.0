@@ -36,7 +36,7 @@ const login = async (req, res) => {
       const cookieOptions = {
         httpOnly: true,
         secure: true,                    // true in prod, false in dev
-        sameSite: none, // "none" in prod, "lax" in dev
+        sameSite: 'none', // "none" in prod, "lax" in dev
         maxAge: 1 * 24 * 60 * 60 * 1000,
         path:'/'
       };
@@ -136,7 +136,7 @@ const logout = async (req, res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: true,
-    sameSite: none,
+    sameSite: 'none',
   };
 
   if (isProduction) {
