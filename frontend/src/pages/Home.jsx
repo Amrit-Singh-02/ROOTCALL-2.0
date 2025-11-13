@@ -7,8 +7,8 @@ import axios from "axios";
 import "../App.css";
 import { AuthContext } from "../contexts/AuthContext";
 
-// ✅ Get backend URL from environment variable
-const server = process.env.REACT_APP_BACKEND_UR || "http://localhost:8000";
+// ✅ Get backend URL from .env file
+const server = process.env.REACT_APP_BACKEND_URL;
 
 const Home = () => {
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ const Home = () => {
         <div className="leftPannel">
           <div>
             <h2 style={{ marginBottom: "25px" }}>
-              Providing Quality video call{" "}
+              Providing Quality video call
             </h2>
             <div style={{ display: "flex", gap: "10px" }}>
               <TextField

@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { Meeting } from "../models/meeting.model.js";
-import path from "path";
 
 const login = async (req, res) => {
   const { username, password } = req.body;
@@ -29,26 +28,13 @@ const login = async (req, res) => {
         { expiresIn: "1d" }
       );
 
-      // ✅ DYNAMIC COOKIE SETTINGS based on NODE_ENV
-      const isProduction = process.env.NODE_ENV === "production";
-      console.log(isProduction)
-      
-      const cookieOptions = {
+      // ✅ Simple cookie settings - works for both local and production
+      res.cookie("token", token, {
         httpOnly: true,
-        secure: true,                    // true in prod, false in dev
-        sameSite: 'none', // "none" in prod, "lax" in dev
+        secure: true,              // Always true
+        sameSite: "none",          // Always none for cross-origin
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        path:'/'
-      };
-
-      // Only add domain in production
-      if (true) {
-        cookieOptions.domain = ".onrender.com";
-      }
-
-      res.cookie("token", token, cookieOptions);
-
-      console.log(`✅ Login successful for user: ${username} (${isProduction ? 'PRODUCTION' : 'DEVELOPMENT'})`);
+      });
 
       return res.status(httpStatus.OK).json({ 
         message: "Login successful",
@@ -130,20 +116,12 @@ const verifyUser = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  // ✅ DYNAMIC COOKIE CLEARING based on NODE_ENV
-  const isProduction = process.env.NODE_ENV === "production";
-  
-  const cookieOptions = {
+  // ✅ Simple cookie clearing - same settings as login
+  res.clearCookie("token", {
     httpOnly: true,
     secure: true,
-    sameSite: 'none',
-  };
-
-  if (isProduction) {
-    cookieOptions.domain = ".onrender.com";
-  }
-
-  res.clearCookie("token", cookieOptions);
+    sameSite: "none",
+  });
   return res.status(200).json({ message: "Logged out successfully" });
 };
 

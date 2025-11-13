@@ -8,7 +8,7 @@ import userRoutes from './routes/users.routes.js';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 
-// ✅ LOAD ENVIRONMENT VARIABLES
+// ✅ Load .env file
 dotenv.config();
 
 const app = express();
@@ -17,15 +17,14 @@ const io = connectToSocket(server);
 
 app.set("port", process.env.PORT || 8000);
 
-// ✅ cookieParser MUST come FIRST
 app.use(cookieParser());
 
-// ✅ CORS Configuration using environment variable
+// ✅ Use FRONTEND_URL from .env
 app.use(cors({
-    origin: process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3000',
-    credentials: true,
+    origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
 }));
 
 app.use(express.json({limit:"40kb"}));
@@ -35,18 +34,15 @@ app.use("/api/v1/users", userRoutes);
 
 const start = async () => {
   try {
-    const connectionDB = await mongoose.connect(
-      process.env.MONGO_URI || "mongodb+srv://diather1234_db_user:t7R20n3hfGvRQmlu@cluster0.nmsvpdr.mongodb.net/videoLogs?retryWrites=true&w=majority&appName=Cluster0"
-    );
-    console.log(`✅ Mongo Connected: ${mongoose.connection.host}`);
+    const connectionDB = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`Mongo Connected: ${mongoose.connection.host}`);
 
     server.listen(app.get("port"), (err) => {
       if (err) console.log(err);
-      console.log(`🚀 Server running on port ${app.get("port")}`);
+      console.log(`Server running on port ${app.get("port")}`);
     });
   } catch (error) {
-    console.error("❌ Database connection failed:", error);
-    process.exit(1);
+    console.error("Database connection failed:", error);
   }
 };
 

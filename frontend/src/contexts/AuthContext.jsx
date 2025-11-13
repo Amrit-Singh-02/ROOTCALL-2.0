@@ -2,16 +2,14 @@ import axios, { HttpStatusCode } from "axios";
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// ✅ Get backend URL from environment variable
-const server = process.env.REACT_APP_BACKEND_UR || "http://localhost:8000";
-
-
+// ✅ Get backend URL from .env file
+const server = process.env.REACT_APP_BACKEND_URL;
 
 export const AuthContext = createContext({});
 
 const client = axios.create({
   baseURL: `${server}/api/v1/users/`,
-  withCredentials: true, // Send cookies with requests
+  withCredentials: true,
 });
 
 export const AuthProvider = ({ children }) => {
