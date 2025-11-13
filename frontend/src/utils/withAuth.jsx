@@ -10,7 +10,7 @@ const withAuth = (WrappedComponent) => {
     const [isChecking, setIsChecking] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    useEffect(() => {
+    useEffect(() => { 
       const checkAuth = async () => {
         try {
           console.log("🔍 Checking auth at:", `${server}/api/v1/users/verify`);
