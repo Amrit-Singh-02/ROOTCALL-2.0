@@ -28,13 +28,17 @@ const login = async (req, res) => {
         { expiresIn: "1d" }
       );
 
-      // ✅ Simple cookie settings - works for both local and production
+      // ✅ FIX: Check if it's localhost for development
+      const isLocalhost = process.env.FRONTEND_URL?.includes('localhost');
+      
       res.cookie("token", token, {
         httpOnly: true,
-        secure: true,              // Always true
-        sameSite: "none",          // Always none for cross-origin
+        secure: !isLocalhost,           // false for localhost, true for production
+        sameSite: isLocalhost ? "lax" : "none",  // lax for localhost, none for production
         maxAge: 1 * 24 * 60 * 60 * 1000,
       });
+
+      console.log(`✅ Login successful for: ${username} (localhost: ${isLocalhost})`);
 
       return res.status(httpStatus.OK).json({ 
         message: "Login successful",
@@ -116,12 +120,15 @@ const verifyUser = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  // ✅ Simple cookie clearing - same settings as login
+  // ✅ FIX: Match cookie settings with login
+  const isLocalhost = process.env.FRONTEND_URL?.includes('localhost');
+  
   res.clearCookie("token", {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: !isLocalhost,
+    sameSite: isLocalhost ? "lax" : "none",
   });
+  
   return res.status(200).json({ message: "Logged out successfully" });
 };
 

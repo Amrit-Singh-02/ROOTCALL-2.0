@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// ✅ Get backend URL from .env file
 const server = process.env.REACT_APP_BACKEND_URL;
 
 const withAuth = (WrappedComponent) => {
@@ -14,14 +13,23 @@ const withAuth = (WrappedComponent) => {
     useEffect(() => {
       const checkAuth = async () => {
         try {
+          console.log("🔍 Checking auth at:", `${server}/api/v1/users/verify`);
+          
           const response = await axios.get(`${server}/api/v1/users/verify`, {
             withCredentials: true,
           });
           
+          console.log("✅ Auth check passed:", response.status);
+          
           if (response.status === 200) {
             setIsAuthenticated(true);
+          } else {
+            console.log("❌ Not authenticated, redirecting...");
+            router('/auth');
           }
         } catch (error) {
+          console.error("❌ Auth check failed:", error.response?.status || error.message);
+          setIsAuthenticated(false);
           router('/auth');
         } finally {
           setIsChecking(false);
@@ -37,14 +45,19 @@ const withAuth = (WrappedComponent) => {
           display: 'flex', 
           justifyContent: 'center', 
           alignItems: 'center', 
-          height: '100vh' 
+          height: '100vh',
+          flexDirection: 'column'
         }}>
-          Loading...
+          <p>Loading...</p>
         </div>
       );
     }
 
-    return isAuthenticated ? <WrappedComponent {...props} /> : null;
+    if (!isAuthenticated) {
+      return null; // Don't render anything if not authenticated
+    }
+
+    return <WrappedComponent {...props} />;
   };
   
   return AuthComponent;

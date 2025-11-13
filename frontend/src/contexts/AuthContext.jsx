@@ -2,8 +2,9 @@ import axios, { HttpStatusCode } from "axios";
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// ✅ Get backend URL from .env file
 const server = process.env.REACT_APP_BACKEND_URL;
+
+console.log("🔗 Backend Server URL:", server); // ✅ Debug log
 
 export const AuthContext = createContext({});
 
@@ -35,16 +36,21 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogin = async (username, password) => {
     try {
+      console.log("🔐 Attempting login to:", `${server}/api/v1/users/login`);
+      
       let request = await client.post("/login", {
         username: username,
         password: password,
       });
+      
+      console.log("✅ Login response:", request.status);
       
       if (request.status === HttpStatusCode.Ok) {
         router("/home");
         return request.data; 
       }
     } catch (err) {
+      console.error("❌ Login failed:", err.response?.data || err.message);
       throw err;
     }
   };
