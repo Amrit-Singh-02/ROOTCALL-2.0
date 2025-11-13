@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { Meeting } from "../models/meeting.model.js";
+import path from "path";
 
 const login = async (req, res) => {
   const { username, password } = req.body;
@@ -30,12 +31,14 @@ const login = async (req, res) => {
 
       // ✅ DYNAMIC COOKIE SETTINGS based on NODE_ENV
       const isProduction = process.env.NODE_ENV === "production";
+      console.log(isProduction)
       
       const cookieOptions = {
         httpOnly: true,
-        secure: isProduction,                    // true in prod, false in dev
-        sameSite: isProduction ? "none" : "lax", // "none" in prod, "lax" in dev
+        secure: true,                    // true in prod, false in dev
+        sameSite: none, // "none" in prod, "lax" in dev
         maxAge: 1 * 24 * 60 * 60 * 1000,
+        path:'/'
       };
 
       // Only add domain in production
@@ -132,8 +135,8 @@ const logout = async (req, res) => {
   
   const cookieOptions = {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
+    secure: true,
+    sameSite: none,
   };
 
   if (isProduction) {

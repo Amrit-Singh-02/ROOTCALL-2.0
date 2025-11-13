@@ -17,6 +17,7 @@ const withAuth = (WrappedComponent) => {
           const response = await axios.get(`${server}/api/v1/users/verify`, {
             withCredentials: true,
           });
+          console.log(response)
           
           if (response.status === 200) {
             setIsAuthenticated(true);
