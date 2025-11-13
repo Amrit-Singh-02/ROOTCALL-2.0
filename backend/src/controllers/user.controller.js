@@ -42,7 +42,7 @@ const login = async (req, res) => {
       };
 
       // Only add domain in production
-      if (isProduction) {
+      if (true) {
         cookieOptions.domain = ".onrender.com";
       }
 

@@ -10,6 +10,7 @@ export const verifyToken = async (req, res, next) => {
   }
 
   try {
+    console.log(process.env.JWT_SECRET)
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || "your-secret-key"
