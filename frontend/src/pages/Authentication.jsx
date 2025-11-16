@@ -1,200 +1,220 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AuthContext } from '../contexts/AuthContext';
-import Snackbar from '@mui/material/Snackbar';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const defaultTheme = createTheme();
+import { Lock } from 'lucide-react';
+import '../styles/authentication.style.css';
 
 export default function Authentication() {
-  const [username, setUsername] = React.useState("")
-  const [password, setPassword] = React.useState("")
-  const [name, setName] = React.useState("")
-  const [error, setError] = React.useState()
-  const [message, setMessage] = React.useState()
-  const [formState, setFormState] = React.useState(0)
-  const [open, setOpen] = React.useState(false)
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState();
+  const [message, setMessage] = useState();
+  const [formState, setFormState] = useState(0); // 0 = Sign In, 1 = Sign Up
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const {handleRegister, handleLogin} = React.useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Try to use AuthContext if available, otherwise provide fallback
+  let handleRegister, handleLogin;
+  try {
+    const context = useContext(require('../contexts/AuthContext').AuthContext);
+    handleRegister = context?.handleRegister;
+    handleLogin = context?.handleLogin;
+  } catch (e) {
+    // Fallback if AuthContext is not available
+    console.warn('AuthContext not found, using fallback');
+  }
+
   // ✅ RANDOM BACKGROUND IMAGE - Using Lorem Picsum
-  // Generates a random seed for a unique image on every page load
-  const [backgroundImage] = React.useState(() => {
+  const [backgroundImage] = useState(() => {
     const randomSeed = Math.random().toString(36).substring(7);
     const imageUrl = `https://picsum.photos/seed/${randomSeed}/1920/1080`;
-    // console.log("🖼️ Background Image URL:", imageUrl);
     return imageUrl;
   });
 
-  let handleAuth = async()=>{
-    try{
-      if(formState === 0){
-        let result = await handleLogin(username, password)
+  let handleAuth = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      if (formState === 0) {
+        // Sign In
+        if (handleLogin) {
+          let result = await handleLogin(username, password);
+          if (result) {
+            setError("");
+          }
+        } else {
+          console.log("Login attempt:", { username, password });
+          setMessage("Login functionality not configured");
+          setOpen(true);
+        }
       }
-      if(formState === 1){
-        let result = await handleRegister(name, username, password)
-        
-        setUsername("")
-        setMessage(result)
-        setOpen(true)
-        setError("")
-        setFormState(0)
-        setPassword("")
-        setName("")
+      if (formState === 1) {
+        // Sign Up
+        if (handleRegister) {
+          let result = await handleRegister(name, username, password);
+          setUsername("");
+          setMessage(result);
+          setOpen(true);
+          setError("");
+          setFormState(0);
+          setPassword("");
+          setName("");
+        } else {
+          console.log("Signup attempt:", { name, username, password });
+          setMessage("Registration functionality not configured");
+          setOpen(true);
+        }
       }
-    }catch(err){
-      let message = (err.response.data.message);
-      setError(message)
+    } catch (err) {
+      let errorMessage = err?.response?.data?.message || err?.message || "An error occurred";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      {/* ✅ FULL SCREEN BACKGROUND WITH RANDOM LOREM PICSUM IMAGE */}
-      <Box
-        sx={{
-          height: '100vh',
-          width: '100vw',
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#2c3e50', // Fallback dark color if image fails to load
-        }}
-      >
-        <CssBaseline />
-        
-        {/* ✅ CENTERED FORM CARD - Semi-transparent white background */}
-        <Paper 
-          elevation={6} 
-          sx={{ 
-            width: { xs: '90%', sm: '500px', md: '450px' },
-            padding: 4,
-            borderRadius: 2,
-            backgroundColor: 'rgba(255, 255, 255, 0.95)', // 95% white, 5% transparent
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+    <div
+      className="auth-background"
+      style={{
+        backgroundImage: `url('${backgroundImage}')`,
+      }}
+    >
+      {/* ✅ GLASSMORPHIC FORM CARD */}
+      <div className="auth-glass-card">
+        <div className="auth-card-content">
+          {/* ✅ Logo - clickable to navigate to home "/" */}
+          <div
+            className="auth-logo"
+            onClick={() => navigate('/')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                navigate('/');
+              }
             }}
           >
-            {/* ✅ Logo - clickable to navigate to home "/" */}
-            <img
-              src="/logoB.png"
-              alt="Root Call Logo"
-              onClick={() => navigate('/')}
-              style={{
-                cursor: 'pointer',
-                width: '200px',
-                marginBottom: '40px',
+            {/* Replace with your actual logo image */}
+            <svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* <path d="M20 10L20 40L40 25Z" fill="#D97706" /> */}
+              <text x="30" y="32" fontFamily="Arial, sans-serif" fontSize="25" fontWeight="800" fill="#1F2937">
+                ROOTCALL
+              </text>
+            </svg>
+          </div>
+
+          {/* Lock Icon in Circle */}
+          <div className="auth-lock-icon">
+            <Lock size={24} color="white" />
+          </div>
+
+          {/* Sign In / Sign Up Toggle Buttons */}
+          <div className="auth-toggle-buttons">
+            <button
+              className={`auth-toggle-btn ${formState === 0 ? "active" : ""}`}
+              onClick={() => {
+                setFormState(0);
+                setError("");
+                setName("");
               }}
-            />
+              type="button"
+            >
+              Sign In
+            </button>
+            <button
+              className={`auth-toggle-btn ${formState === 1 ? "active" : ""}`}
+              onClick={() => {
+                setFormState(1);
+                setError("");
+              }}
+              type="button"
+            >
+              Sign Up
+            </button>
+          </div>
 
-            {/* Avatar with lock icon */}
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
-
-            {/* Sign In / Sign Up Toggle Buttons */}
-            <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
-              <Button 
-                variant={formState === 0 ? "contained" : "outlined"} 
-                onClick={() => {setFormState(0)}}
-              >
-                Sign In
-              </Button>
-              <Button 
-                variant={formState === 1 ? "contained" : "outlined"} 
-                onClick={() => {setFormState(1)}}
-              >
-                Sign Up
-              </Button>
-            </Box>
-
-            {/* Form Fields */}
-            <Box component="form" noValidate sx={{ width: '100%' }}>
-              
-              {/* Full Name field - only shows during Sign Up (formState === 1) */}
-              {formState === 1 && (
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
+          {/* Form Fields */}
+          <form className="auth-form" onSubmit={(e) => { e.preventDefault(); handleAuth(); }}>
+            {/* Full Name field - only shows during Sign Up (formState === 1) */}
+            {formState === 1 && (
+              <div className="auth-form-group">
+                <input
+                  type="text"
+                  placeholder="Full Name"
                   id="fullname"
-                  label="Full Name"
                   name="fullname"
                   value={name}
-                  autoFocus
                   onChange={(e) => setName(e.target.value)}
+                  className="auth-input"
+                  required={formState === 1}
+                  autoFocus
                 />
-              )}
-              
-              {/* Username field */}
-              <TextField
-                margin="normal"
-                required
-                fullWidth
+              </div>
+            )}
+
+            {/* Username field */}
+            <div className="auth-form-group">
+              <input
+                type="text"
+                placeholder="Username or Email"
                 id="username"
-                label="Username"
                 name="username"
                 value={username}
-                autoFocus={formState === 0}
                 onChange={(e) => setUsername(e.target.value)}
-              />
-              
-              {/* Password field */}
-              <TextField
-                margin="normal"
+                className="auth-input"
                 required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                value={password}
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
+                autoFocus={formState === 0}
               />
-              
-              {/* Error message - only shows when error exists */}
-              {error && <p style={{color:"red", marginTop: '10px'}}>{error}</p>}
+            </div>
 
-              {/* Login/Register Button */}
-              <Button
-                type="button"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleAuth}
-              >
-                {formState === 0 ? "Login" : "Register"}
-              </Button>
-            </Box>
-          </Box>
-        </Paper>
-      </Box>
+            {/* Password field */}
+            <div className="auth-form-group">
+              <input
+                type="password"
+                placeholder="Password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="auth-input"
+                required
+              />
+            </div>
+
+            {/* Error message - only shows when error exists */}
+            {error && <p className="auth-error">{error}</p>}
+
+            {/* Login/Register Button */}
+            <button
+              type="button"
+              className="auth-submit-btn"
+              onClick={handleAuth}
+              disabled={loading}
+            >
+              {loading ? "Loading..." : formState === 0 ? "LOGIN" : "REGISTER"}
+            </button>
+          </form>
+        </div>
+      </div>
 
       {/* Success message snackbar - shows after successful registration */}
-      <Snackbar 
-        open={open}
-        autoHideDuration={4000}
-        message={message}
-        onClose={() => setOpen(false)}
-      />
-
-    </ThemeProvider>
+      {open && (
+        <div className="auth-snackbar">
+          <div className="auth-snackbar-content">
+            {message}
+          </div>
+          <button
+            className="auth-snackbar-close"
+            onClick={() => setOpen(false)}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

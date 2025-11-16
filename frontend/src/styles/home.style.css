@@ -1,0 +1,431 @@
+/* ============================================ 
+   HOME PAGE - GLASSMORPHIC DESIGN WITH LANDING THEME
+   ============================================ */
+
+/* Container */
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+/* Glassmorphic Navigation Bar */
+.home-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  background: rgba(20, 13, 35, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.navbar-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo Container - Pill Shaped */
+/* .navbar-logo-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50px;
+  padding: 8px 20px;
+  transition: all 0.3s ease;
+} */
+
+.navbar-logo-container:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+}
+
+.navbar-logo {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  width: 120px;
+  height: auto;
+  display: block;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.03);
+}
+
+/* Navbar Menu */
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* History/Text Button */
+.navbar-text-btn {
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.navbar-text-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+/* Logout Button */
+.navbar-logout-btn {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.navbar-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+}
+
+.navbar-logout-btn:active {
+  transform: scale(0.98);
+}
+
+/* Main Content */
+.home-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.home-grid {
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Left Panel */
+.home-left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.home-welcome-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.home-title {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+  background: linear-gradient(135deg, #ffffff 0%, #d1d5db 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.home-subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Input Section */
+.home-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.home-input-group {
+  display: flex;
+  gap: 12px;
+}
+
+.home-meeting-input {
+  flex: 1;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.home-meeting-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.home-meeting-input:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.home-meeting-input:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.8);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Join Button */
+.home-join-btn {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.home-join-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.home-join-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.home-join-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Features Section */
+.home-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.home-feature-item {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.home-feature-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.home-feature-item p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Right Panel */
+.home-right-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-image-container {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 3/4;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.home-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .home-title {
+    font-size: 40px;
+  }
+
+  .home-subtitle {
+    font-size: 16px;
+  }
+
+  .home-image-container {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-content {
+    padding: 30px 16px;
+  }
+
+  .home-grid {
+    gap: 30px;
+  }
+
+  .home-title {
+    font-size: 32px;
+  }
+
+  .navbar-content {
+    padding: 0 16px;
+  }
+
+  .navbar-logo-container {
+    padding: 6px 16px;
+  }
+
+  .navbar-logo {
+    width: 100px;
+  }
+
+  .navbar-menu {
+    gap: 8px;
+  }
+
+  .navbar-text-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .navbar-logout-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .home-input-group {
+    flex-direction: column;
+  }
+
+  .home-features {
+    grid-template-columns: 1fr;
+  }
+
+  .home-image-container {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-title {
+    font-size: 24px;
+  }
+
+  .home-subtitle {
+    font-size: 14px;
+  }
+
+  .home-content {
+    padding: 20px 12px;
+  }
+
+  .home-grid {
+    gap: 20px;
+  }
+
+  .navbar-content {
+    padding: 0 12px;
+  }
+
+  .navbar-logo-container {
+    padding: 5px 12px;
+  }
+
+  .navbar-logo {
+    width: 90px;
+  }
+
+  .navbar-menu {
+    gap: 6px;
+  }
+
+  .navbar-text-btn {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .navbar-logout-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .home-meeting-input {
+    font-size: 14px;
+  }
+
+  .home-join-btn {
+    font-size: 14px;
+    padding: 12px 24px;
+  }
+
+  .home-image-container {
+    display: none;
+  }
+}

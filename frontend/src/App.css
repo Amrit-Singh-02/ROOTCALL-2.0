@@ -1,6 +1,541 @@
 /* ---------------------------
    Global / Base
    --------------------------- */
+
+/* ============================================
+   HEADER STYLES
+   ============================================ */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  transition: all 0.3s ease;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+}
+
+.header.header-scrolled {
+  top: 16px;
+  left: 80px;
+  right: 80px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  transition: all 0.3s ease;
+}
+
+.header.header-scrolled .nav {
+  gap: 16px;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.logo:hover {
+  color: #e0e0e0;
+}
+
+.nav-links {
+  display: none;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex;
+  }
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-signin {
+  display: none;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+@media (min-width: 768px) {
+  .nav-signin {
+    display: block;
+  }
+}
+
+.nav-signin:hover {
+  color: white;
+}
+
+.nav-signup {
+  padding: 8px 20px;
+  background: white;
+  color: #1e293b;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.nav-signup:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================
+   LANDING PAGE STYLES
+   ============================================ */
+.landing-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #0f1729 50%, #0f172a 100%);
+  color: white;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Animated Liquid Background */
+.liquid-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.liquid-flow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  animation: liquidFlow 8s ease-in-out infinite;
+  background: linear-gradient(135deg, rgba(126, 34, 206, 0.4) 0%, rgba(30, 27, 27, 0.5) 50%, rgba(15, 23, 42, 0.4) 100%);
+}
+
+@keyframes liquidFlow {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  25% {
+    filter: hue-rotate(30deg);
+  }
+  50% {
+    filter: hue-rotate(60deg) brightness(1.1);
+  }
+  75% {
+    filter: hue-rotate(30deg);
+  }
+  100% {
+    filter: hue-rotate(0deg);
+  }
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.hero-section {
+  padding-top: 80px;
+  padding-bottom: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  z-index: 10;
+}
+
+.hero-container {
+  max-width: 896px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(64px);
+  border-radius: 24px;
+  padding: 48px 48px;
+  margin-bottom: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(126, 34, 206, 0.2);
+}
+
+@media (max-width: 768px) {
+  .hero-container {
+    padding: 32px 24px;
+  }
+}
+
+.hero-content {
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 56px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 36px;
+  }
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: rgb(203, 213, 225);
+  max-width: 768px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .hero-buttons {
+    flex-direction: row;
+  }
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: white;
+  color: #1e293b;
+}
+
+.btn-primary:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   FEATURES SECTION
+   ============================================ */
+.features-section {
+  padding: 80px 16px;
+  background: linear-gradient(180deg, #0f172a 0%, #0d1520 100%);
+  position: relative;
+  z-index: 10;
+}
+
+.section-container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 48px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 32px;
+    margin-bottom: 48px;
+  }
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.feature-card {
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.feature-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  color: #60a5fa;
+  transition: transform 0.2s;
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1);
+}
+
+.feature-badge {
+  font-size: 12px;
+  padding: 6px 12px;
+  background: rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+  border-radius: 9999px;
+}
+
+.feature-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.feature-description {
+  font-size: 14px;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+/* ============================================
+   RECOGNITION SECTION
+   ============================================ */
+.recognition-section {
+  padding: 80px 16px;
+  position: relative;
+  z-index: 10;
+}
+
+.recognition-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.recognition-card {
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  transition: all 0.2s;
+}
+
+.recognition-card:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.recognition-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #60a5fa;
+  margin-bottom: 8px;
+}
+
+.recognition-subtitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.recognition-description {
+  font-size: 14px;
+  color: #cbd5e1;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.recognition-link {
+  background: none;
+  border: none;
+  color: #60a5fa;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.recognition-link:hover {
+  color: #93c5fd;
+}
+
+/* ============================================
+   CTA SECTION
+   ============================================ */
+.cta-section {
+  padding: 80px 16px;
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+.cta-subtitle {
+  font-size: 18px;
+  color: #cbd5e1;
+  margin-bottom: 40px;
+  max-width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .cta-buttons {
+    flex-direction: row;
+  }
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.5);
+  padding: 64px 16px;
+  position: relative;
+  z-index: 10;
+  margin-top: 80px;
+}
+
+.footer-container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.footer-column h4 {
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column li {
+  margin-bottom: 8px;
+}
+
+.footer-column a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.footer-column a:hover {
+  color: white;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 32px;
+}
+
+.footer-bottom p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+}
+   
+   
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; padding: 0; }
 body {

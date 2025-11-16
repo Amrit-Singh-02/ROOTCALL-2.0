@@ -1,0 +1,947 @@
+/* ============================================ 
+   VIDEO MEET PAGE - GLASSMORPHIC DESIGN
+   ============================================ */
+
+.videomeet-wrapper {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  color: white;
+}
+
+/* ============================================ 
+   LOBBY SCREEN
+   ============================================ */
+
+.videomeet-lobby {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lobby-glass-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 48px 32px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lobby-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  background: linear-gradient(135deg, #ffffff 0%, #d1d5db 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.lobby-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lobby-input {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.lobby-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lobby-input:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.lobby-input:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.8);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.lobby-connect-btn {
+  width: 100%;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.lobby-connect-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.lobby-connect-btn:active {
+  transform: translateY(0);
+}
+
+.lobby-video {
+  width: 100%;
+  max-height: 300px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+}
+
+/* ============================================ 
+   VIDEO CONFERENCE SCREEN
+   ============================================ */
+
+.videomeet-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Conference View - Remote Videos */
+.videomeet-conference {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+}
+
+.videomeet-remote-video {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.4);
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.videomeet-remote-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Local Video (Picture-in-Picture) */
+.videomeet-local-wrapper {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 280px;
+  height: 200px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 50;
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.videomeet-local-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+/* Control Buttons */
+.videomeet-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: rgba(20, 13, 35, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.control-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+.control-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.video-btn {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.video-btn:hover {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+.audio-btn {
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+}
+
+.audio-btn:hover {
+  background: rgba(168, 85, 247, 0.3);
+}
+
+.screen-btn {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.screen-btn:hover {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+.chat-btn {
+  position: relative;
+  background: rgba(236, 72, 153, 0.2);
+  color: #ec4899;
+}
+
+.chat-btn:hover {
+  background: rgba(236, 72, 153, 0.3);
+}
+
+.chat-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.end-call-btn {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.end-call-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+/* ============================================ 
+   CHAT ROOM
+   ============================================ */
+
+.videomeet-chat-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 380px;
+  height: 100%;
+  z-index: 200;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.videomeet-chat-glass {
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 13, 35, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 32px rgba(0, 0, 0, 0.4);
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.chat-close-btn {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chat-sender {
+  font-weight: 600;
+  font-size: 13px;
+  color: #3b82f6;
+  margin: 0;
+}
+
+.chat-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.chat-empty {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  font-style: italic;
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.chat-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.chat-input:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.chat-input:focus {
+  outline: none;
+  border-color: rgba(236, 72, 153, 0.6);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.1);
+}
+
+.chat-send-btn {
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.chat-send-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+
+.chat-send-btn:active {
+  transform: translateY(0);
+}
+
+/* ============================================ 
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .videomeet-conference {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .videomeet-local-wrapper {
+    width: 200px;
+    height: 150px;
+  }
+
+  .videomeet-controls {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .control-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 768px) {
+  .videomeet-conference {
+    grid-template-columns: 1fr;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .videomeet-remote-video {
+    aspect-ratio: auto;
+    height: 300px;
+  }
+
+  .videomeet-local-wrapper {
+    width: 150px;
+    height: 120px;
+    bottom: 80px;
+    right: 10px;
+  }
+
+  .videomeet-controls {
+    bottom: 10px;
+    padding: 10px 12px;
+    gap: 6px;
+    border-radius: 40px;
+  }
+
+  .control-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .control-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .videomeet-chat-overlay {
+    max-width: 100%;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height: 50vh;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    animation: slideInUp 0.3s ease-out;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .videomeet-chat-glass {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .chat-header {
+    padding: 16px;
+  }
+
+  .chat-messages {
+    padding: 16px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .videomeet-conference {
+    grid-template-columns: 1fr;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .videomeet-remote-video {
+    height: 240px;
+  }
+
+  .videomeet-local-wrapper {
+    width: 120px;
+    height: 100px;
+    bottom: 70px;
+    right: 8px;
+  }
+
+  .videomeet-controls {
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 10px;
+    gap: 4px;
+  }
+
+  .control-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .control-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .chat-badge {
+    font-size: 10px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .videomeet-chat-overlay {
+    height: 60vh;
+  }
+
+  .chat-header {
+    padding: 12px;
+  }
+
+  .chat-messages {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .chat-input-area {
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .chat-input {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .chat-send-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .lobby-glass-card {
+    padding: 32px 20px;
+    max-width: 90%;
+  }
+
+  .lobby-title {
+    font-size: 22px;
+  }
+
+  .lobby-input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .lobby-connect-btn {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
+/* ============================================ 
+   RESPONSIVE VIDEO GRID LAYOUTS
+   (Add this to videomeet.css - don't remove old styles)
+   ============================================ */
+
+/* 1 person: Full screen */
+.videomeet-conference:has(> div:only-child) {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.videomeet-conference:has(> div:only-child) > div {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+}
+
+/* 2 people: Side by side */
+.videomeet-conference:has(> div:nth-child(2):last-child) {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.videomeet-conference:has(> div:nth-child(2):last-child) > div {
+  aspect-ratio: 16 / 9 !important;
+}
+
+/* 3 people: 2 on top, 1 centered on bottom */
+.videomeet-conference:has(> div:nth-child(3):last-child) {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.videomeet-conference:has(> div:nth-child(3):last-child) > div:nth-child(1),
+.videomeet-conference:has(> div:nth-child(3):last-child) > div:nth-child(2) {
+  aspect-ratio: 16 / 9 !important;
+}
+
+.videomeet-conference:has(> div:nth-child(3):last-child) > div:nth-child(3) {
+  grid-column: 1 / 3;
+  max-width: 50%;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9 !important;
+}
+
+/* 4 people: 2x2 grid */
+.videomeet-conference:has(> div:nth-child(4):last-child) {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.videomeet-conference:has(> div:nth-child(4):last-child) > div {
+  aspect-ratio: 16 / 9 !important;
+}
+
+/* 5 people: 2 on first row, 3 on second row */
+.videomeet-conference:has(> div:nth-child(5):last-child) {
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 1fr 1fr;
+}
+
+.videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(1) {
+  grid-column: 1 / 4;
+  aspect-ratio: 16 / 9 !important;
+}
+
+.videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(2) {
+  grid-column: 4 / 7;
+  aspect-ratio: 16 / 9 !important;
+}
+
+.videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(3) {
+  grid-column: 1 / 3;
+  aspect-ratio: 16 / 9 !important;
+}
+
+.videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(4) {
+  grid-column: 3 / 5;
+  aspect-ratio: 16 / 9 !important;
+}
+
+.videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(5) {
+  grid-column: 5 / 7;
+  aspect-ratio: 16 / 9 !important;
+}
+
+/* 6 people: 2x3 grid */
+.videomeet-conference:has(> div:nth-child(6):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.videomeet-conference:has(> div:nth-child(6):last-child) > div {
+  aspect-ratio: 16 / 9 !important;
+}
+
+/* 7 people: 3x3 grid */
+.videomeet-conference:has(> div:nth-child(7):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.videomeet-conference:has(> div:nth-child(7):last-child) > div {
+  aspect-ratio: 16 / 9 !important;
+}
+
+/* 8 people: 4x2 grid */
+.videomeet-conference:has(> div:nth-child(8):last-child) {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.videomeet-conference:has(> div:nth-child(8):last-child) > div {
+  aspect-ratio: 16 / 9 !important;
+}
+
+/* 9 people: 3x3 grid */
+.videomeet-conference:has(> div:nth-child(9):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.videomeet-conference:has(> div:nth-child(9):last-child) > div {
+  aspect-ratio: 16 / 9 !important;
+}
+
+/* 10+ people: Responsive auto-fit */
+.videomeet-conference:has(> div:nth-child(10)) {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-rows: auto;
+}
+
+.videomeet-conference:has(> div:nth-child(10)) > div {
+  aspect-ratio: 16 / 9 !important;
+}
+
+/* ============================================ 
+   MOBILE RESPONSIVE LAYOUTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* 1 person mobile */
+  .videomeet-conference:has(> div:only-child) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  /* 2 people mobile: stack vertically */
+  .videomeet-conference:has(> div:nth-child(2):last-child) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .videomeet-conference:has(> div:nth-child(2):last-child) > div {
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  /* 3 people mobile: 2 column */
+  .videomeet-conference:has(> div:nth-child(3):last-child) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .videomeet-conference:has(> div:nth-child(3):last-child) > div:nth-child(3) {
+    grid-column: 1 / 3;
+    max-width: 100%;
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  /* 4 people mobile: 2x2 */
+  .videomeet-conference:has(> div:nth-child(4):last-child) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .videomeet-conference:has(> div:nth-child(4):last-child) > div {
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  /* 5 people mobile: 2 columns */
+  .videomeet-conference:has(> div:nth-child(5):last-child) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(1) {
+    grid-column: 1 / 2;
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  .videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(2) {
+    grid-column: 2 / 3;
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  .videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(3) {
+    grid-column: 1 / 2;
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  .videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(4) {
+    grid-column: 2 / 3;
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  .videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(5) {
+    grid-column: 1 / 3;
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  /* 6 people mobile: 2 columns */
+  .videomeet-conference:has(> div:nth-child(6):last-child) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+
+  .videomeet-conference:has(> div:nth-child(6):last-child) > div {
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  /* 7+ people mobile: Single column scroll */
+  .videomeet-conference:has(> div:nth-child(7)) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    overflow-y: auto;
+  }
+
+  .videomeet-conference:has(> div:nth-child(7)) > div {
+    aspect-ratio: 16 / 9 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* All layouts on small screens: single column */
+  .videomeet-conference:has(> div:nth-child(2):last-child),
+  .videomeet-conference:has(> div:nth-child(3):last-child),
+  .videomeet-conference:has(> div:nth-child(4):last-child),
+  .videomeet-conference:has(> div:nth-child(5):last-child),
+  .videomeet-conference:has(> div:nth-child(6):last-child) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .videomeet-conference:has(> div:nth-child(2):last-child) > div,
+  .videomeet-conference:has(> div:nth-child(3):last-child) > div,
+  .videomeet-conference:has(> div:nth-child(4):last-child) > div,
+  .videomeet-conference:has(> div:nth-child(5):last-child) > div,
+  .videomeet-conference:has(> div:nth-child(6):last-child) > div {
+    grid-column: 1 / 2 !important;
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  .videomeet-conference:has(> div:nth-child(3):last-child) > div:nth-child(3),
+  .videomeet-conference:has(> div:nth-child(5):last-child) > div:nth-child(5) {
+    grid-column: 1 / 2 !important;
+  }
+}
