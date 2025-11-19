@@ -7,7 +7,7 @@ export default function Authentication() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [error, setError] = useState();
+  const [errors, setErrors] = useState([]); // ✅ Changed to array
   const [message, setMessage] = useState();
   const [formState, setFormState] = useState(0); // 0 = Sign In, 1 = Sign Up
   const [open, setOpen] = useState(false);
@@ -33,17 +33,55 @@ export default function Authentication() {
     return imageUrl;
   });
 
+  // ✅ NEW: Validate form inputs
+  const validateForm = () => {
+    const newErrors = [];
+
+    if (formState === 1) {
+      // Sign Up validation
+      if (!name || name.trim().length < 3) {
+        newErrors.push("Name must be at least 3 characters long");
+      }
+      if (!username || username.trim().length < 3) {
+        newErrors.push("Username must be at least 3 characters long");
+      }
+      if (!password || password.length < 8) {
+        newErrors.push("Password must be at least 8 characters long");
+      }
+      if (!/^[a-zA-Z0-9]{8,}$/.test(password)) {
+        newErrors.push("Password must contain only letters and numbers");
+      }
+    } else {
+      // Sign In validation
+      if (!username || username.trim().length < 3) {
+        newErrors.push("Username must be at least 3 characters long");
+      }
+      if (!password || password.length < 8) {
+        newErrors.push("Password must be at least 8 characters long");
+      }
+    }
+
+    setErrors(newErrors);
+    return newErrors.length === 0;
+  };
+
   let handleAuth = async () => {
     try {
       setLoading(true);
-      setError("");
+      setErrors([]); // ✅ Clear errors on new attempt
+
+      // ✅ Validate before sending
+      if (!validateForm()) {
+        setLoading(false);
+        return;
+      }
 
       if (formState === 0) {
         // Sign In
         if (handleLogin) {
           let result = await handleLogin(username, password);
           if (result) {
-            setError("");
+            setErrors([]);
           }
         } else {
           console.log("Login attempt:", { username, password });
@@ -58,7 +96,7 @@ export default function Authentication() {
           setUsername("");
           setMessage(result);
           setOpen(true);
-          setError("");
+          setErrors([]);
           setFormState(0);
           setPassword("");
           setName("");
@@ -70,7 +108,7 @@ export default function Authentication() {
       }
     } catch (err) {
       let errorMessage = err?.response?.data?.message || err?.message || "An error occurred";
-      setError(errorMessage);
+      setErrors([errorMessage]); // ✅ Convert to array
     } finally {
       setLoading(false);
     }
@@ -118,7 +156,7 @@ export default function Authentication() {
               className={`auth-toggle-btn ${formState === 0 ? "active" : ""}`}
               onClick={() => {
                 setFormState(0);
-                setError("");
+                setErrors([]); // ✅ Clear errors
                 setName("");
               }}
               type="button"
@@ -129,13 +167,15 @@ export default function Authentication() {
               className={`auth-toggle-btn ${formState === 1 ? "active" : ""}`}
               onClick={() => {
                 setFormState(1);
-                setError("");
+                setErrors([]); // ✅ Clear errors
               }}
               type="button"
             >
               Sign Up
             </button>
           </div>
+
+          
 
           {/* Form Fields */}
           <form className="auth-form" onSubmit={(e) => { e.preventDefault(); handleAuth(); }}>
@@ -149,7 +189,7 @@ export default function Authentication() {
                   name="fullname"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="auth-input"
+                  className={`auth-input ${errors.some(e => e.includes("Name")) ? "error" : ""}`}
                   required={formState === 1}
                   autoFocus
                 />
@@ -160,12 +200,12 @@ export default function Authentication() {
             <div className="auth-form-group">
               <input
                 type="text"
-                placeholder="Username or Email"
+                placeholder="Username "
                 id="username"
                 name="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="auth-input"
+                className={`auth-input ${errors.some(e => e.includes("Username")) ? "error" : ""}`}
                 required
                 autoFocus={formState === 0}
               />
@@ -180,13 +220,23 @@ export default function Authentication() {
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="auth-input"
+                className={`auth-input ${errors.some(e => e.includes("Password")) ? "error" : ""}`}
                 required
               />
             </div>
 
-            {/* Error message - only shows when error exists */}
-            {error && <p className="auth-error">{error}</p>}
+            {/* ✅ NEW: Error Messages as Bullet Points */}
+          {errors.length > 0 && (
+            <div className="auth-error-box">
+              <ul className="auth-error-list">
+                {errors.map((error, index) => (
+                  <li key={index} className="auth-error-item">
+                    {error}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
             {/* Login/Register Button */}
             <button

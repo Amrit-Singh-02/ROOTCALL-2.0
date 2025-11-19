@@ -8,12 +8,14 @@ import {
   logout       // ✅ ADD THIS
 } from "../controllers/user.controller.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
+import { validate } from "../middleware/validator.middleware.js";
+import { registerSchema } from "../validator/user.validator.js";
 
 const router = Router();
 
 // ✅ REMOVED verifyToken middleware from these routes
 router.route("/login").post(login);
-router.route("/register").post(register);
+router.route("/register").post(validate(registerSchema), register);
 
 // ✅ ADD THESE NEW ROUTES
 router.route("/verify").get(verifyToken, verifyUser);

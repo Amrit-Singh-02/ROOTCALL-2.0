@@ -1,4 +1,79 @@
 /* ============================================ 
+   ERROR BOX - BULLET POINTS
+   ============================================ */
+
+.auth-error-box {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-error-list {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.auth-error-item {
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.auth-error-item:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================ 
+   ERROR INPUT STYLING
+   ============================================ */
+
+.auth-input.error {
+  border-color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.05) !important;
+}
+
+.auth-input.error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* ============================================ 
+   OLD ERROR PARAGRAPH (KEEP FOR COMPATIBILITY)
+   ============================================ */
+
+.auth-error {
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 10px;
+  text-align: center;
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+
+/* ============================================ 
    AUTHENTICATION PAGE - GLASSMORPHIC DESIGN
    ============================================ */
 

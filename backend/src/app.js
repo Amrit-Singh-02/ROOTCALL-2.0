@@ -7,6 +7,7 @@ import { connectToSocket } from "./controllers/socketManager.js";
 import userRoutes from './routes/users.routes.js';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import { errorMiddleware } from "./middleware/error.middleware.js";
 
 // ✅ Load .env file
 dotenv.config();
@@ -31,6 +32,8 @@ app.use(express.json({limit:"40kb"}));
 app.use(express.urlencoded({limit:"40kb", extended:true}));
 
 app.use("/api/v1/users", userRoutes);
+
+app.use(errorMiddleware)
 
 const start = async () => {
   try {
