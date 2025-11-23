@@ -136,7 +136,7 @@
 }
 
 /* ============================================ 
-   VIDEO CONFERENCE SCREEN
+   VIDEO CONFERENCE SCREEN - DYNAMIC LAYOUT
    ============================================ */
 
 .videomeet-container {
@@ -146,15 +146,77 @@
   overflow: hidden;
 }
 
-/* Conference View - Remote Videos */
+/* Conference View - Smart Grid Layout */
 .videomeet-conference {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 12px;
   padding: 12px;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+}
+
+/* Empty state - no participants */
+.videomeet-conference.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-participants {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+}
+
+/* Dynamic grid based on participant count */
+/* 1 participant - full screen */
+.videomeet-conference:has(.videomeet-remote-video:nth-child(1):last-child) {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+/* 2 participants - side by side */
+.videomeet-conference:has(.videomeet-remote-video:nth-child(2):last-child) {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+}
+
+/* 3-4 participants - 2x2 grid */
+.videomeet-conference:has(.videomeet-remote-video:nth-child(3):last-child),
+.videomeet-conference:has(.videomeet-remote-video:nth-child(4):last-child) {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+/* 5-6 participants - 3x2 grid */
+.videomeet-conference:has(.videomeet-remote-video:nth-child(5):last-child),
+.videomeet-conference:has(.videomeet-remote-video:nth-child(6):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+/* 7-9 participants - 3x3 grid */
+.videomeet-conference:has(.videomeet-remote-video:nth-child(7):last-child),
+.videomeet-conference:has(.videomeet-remote-video:nth-child(8):last-child),
+.videomeet-conference:has(.videomeet-remote-video:nth-child(9):last-child) {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+/* 10-12 participants - 4x3 grid */
+.videomeet-conference:has(.videomeet-remote-video:nth-child(10):last-child),
+.videomeet-conference:has(.videomeet-remote-video:nth-child(11):last-child),
+.videomeet-conference:has(.videomeet-remote-video:nth-child(12):last-child) {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+/* 13+ participants - 4x4 grid with scroll */
+.videomeet-conference:has(.videomeet-remote-video:nth-child(13)) {
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(200px, 1fr);
+  overflow-y: auto;
 }
 
 .videomeet-remote-video {
@@ -162,9 +224,12 @@
   border-radius: 12px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.4);
-  aspect-ratio: 16 / 9;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .videomeet-remote-video video {
@@ -510,8 +575,16 @@
    ============================================ */
 
 @media (max-width: 1024px) {
-  .videomeet-conference {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /* Adjust grid for tablets */
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(5):last-child),
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(6):last-child) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(7)) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(180px, 1fr);
   }
 
   .videomeet-local-wrapper {
@@ -531,15 +604,26 @@
 }
 
 @media (max-width: 768px) {
-  .videomeet-conference {
+  /* Mobile adjustments */
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(1):last-child) {
     grid-template-columns: 1fr;
-    padding: 8px;
-    gap: 8px;
   }
 
-  .videomeet-remote-video {
-    aspect-ratio: auto;
-    height: 300px;
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(2):last-child) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(3):last-child),
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(4):last-child) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(5)) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(150px, 1fr);
+    overflow-y: auto;
   }
 
   .videomeet-local-wrapper {
@@ -594,13 +678,18 @@
 
 @media (max-width: 480px) {
   .videomeet-conference {
-    grid-template-columns: 1fr;
-    padding: 4px;
-    gap: 4px;
+    padding: 8px;
+    gap: 8px;
   }
 
-  .videomeet-remote-video {
-    height: 240px;
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(1):last-child),
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(2):last-child) {
+    grid-template-columns: 1fr;
+  }
+
+  .videomeet-conference:has(.videomeet-remote-video:nth-child(3)) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(120px, 1fr);
   }
 
   .videomeet-local-wrapper {
