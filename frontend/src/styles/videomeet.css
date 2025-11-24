@@ -74,6 +74,85 @@
   gap: 16px;
 }
 
+.username-error {
+  color: #ef4444;
+  font-size: 14px;
+  margin: -8px 0 0 0;
+  padding: 0;
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Lobby Media Controls */
+.lobby-media-controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.lobby-media-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.lobby-media-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.lobby-media-btn:active {
+  transform: translateY(0);
+}
+
+.lobby-media-btn.active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #3b82f6;
+}
+
+.lobby-media-btn.active:hover {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+.lobby-media-btn.inactive {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.lobby-media-btn.inactive:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.lobby-media-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
 .lobby-input {
   width: 100%;
   padding: 14px 16px;
@@ -763,6 +842,19 @@
   .lobby-input {
     padding: 12px 14px;
     font-size: 14px;
+  }
+
+  .lobby-media-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .lobby-media-btn {
+    padding: 10px 14px;
+  }
+
+  .lobby-media-label {
+    font-size: 12px;
   }
 
   .lobby-connect-btn {

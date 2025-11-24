@@ -37,6 +37,20 @@ const History = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    return `${hours}:${minutes} ${ampm}`;
+  };
+
+  const formatDateTime = (dateString) => {
+    return `${formatDate(dateString)} at ${formatTime(dateString)}`;
+  };
+
   const handleJoinMeeting = (meetingCode) => {
     navigate(`/${meetingCode}`);
   };
@@ -47,7 +61,7 @@ const History = () => {
       <nav className="history-navbar">
         <div className="history-navbar-content">
           {/* Logo */}
-          <div >
+          <div>
             <svg
               width="120"
               height="32"
@@ -57,7 +71,6 @@ const History = () => {
               onClick={() => navigate('/')}
               className="history-logo"
             >
-              {/* <path d="M20 10L20 40L40 25Z" fill="#D97706" /> */}
               <text
                 x="50"
                 y="32"
@@ -127,12 +140,47 @@ const History = () => {
                     <div className="card-content">
                       <div className="meeting-detail">
                         <label className="detail-label">Meeting Code</label>
-                        <p className="detail-value">{meeting.meetingCode}</p>
+                        <p className="detail-value meeting-code">{meeting.meetingCode}</p>
                       </div>
 
                       <div className="meeting-detail">
-                        <label className="detail-label">Date</label>
-                        <p className="detail-value">{formatDate(meeting.date)}</p>
+                        <label className="detail-label">Date & Time</label>
+                        <div className="datetime-container">
+                          <div className="date-time-row">
+                            <svg
+                              width="16"
+                              height="16"
+                              style={{marginRight:"17px"}}
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              className="datetime-icon"
+                            >
+                              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                              <line x1="16" y1="2" x2="16" y2="6"></line>
+                              <line x1="8" y1="2" x2="8" y2="6"></line>
+                              <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span className="detail-value-inline">{formatDate(meeting.date)}</span>
+                          </div>
+                          <div className="date-time-row">
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              style={{marginRight:"17px"}}
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              className="datetime-icon"
+                            >
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span className="detail-value-inline">{formatTime(meeting.date)}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
