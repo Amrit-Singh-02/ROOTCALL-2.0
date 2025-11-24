@@ -55,6 +55,50 @@
 }
 
 /* ============================================ 
+   PASSWORD TOGGLE BUTTON
+   ============================================ */
+
+.auth-password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.auth-password-input {
+  padding-right: 48px !important;
+}
+
+.auth-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.auth-password-toggle:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-password-toggle:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.auth-password-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================ 
    OLD ERROR PARAGRAPH (KEEP FOR COMPATIBILITY)
    ============================================ */
 
@@ -71,7 +115,6 @@
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
 }
-
 
 /* ============================================ 
    AUTHENTICATION PAGE - GLASSMORPHIC DESIGN
@@ -359,5 +402,13 @@
     bottom: 16px;
     right: 16px;
     left: 16px;
+  }
+
+  .auth-password-toggle {
+    right: 10px;
+  }
+
+  .auth-password-input {
+    padding-right: 44px !important;
   }
 }

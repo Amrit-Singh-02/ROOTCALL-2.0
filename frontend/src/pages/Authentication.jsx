@@ -1,17 +1,18 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock } from 'lucide-react';
+import { Lock, Eye, EyeOff } from 'lucide-react';
 import '../styles/authentication.style.css';
 
 export default function Authentication() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [errors, setErrors] = useState([]); // ✅ Changed to array
+  const [errors, setErrors] = useState([]);
   const [message, setMessage] = useState();
   const [formState, setFormState] = useState(0); // 0 = Sign In, 1 = Sign Up
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,14 +27,14 @@ export default function Authentication() {
     console.warn('AuthContext not found, using fallback');
   }
 
-  // ✅ RANDOM BACKGROUND IMAGE - Using Lorem Picsum
+  // RANDOM BACKGROUND IMAGE - Using Lorem Picsum
   const [backgroundImage] = useState(() => {
     const randomSeed = Math.random().toString(36).substring(7);
     const imageUrl = `https://picsum.photos/seed/${randomSeed}/1920/1080`;
     return imageUrl;
   });
 
-  // ✅ NEW: Validate form inputs
+  // Validate form inputs
   const validateForm = () => {
     const newErrors = [];
 
@@ -68,9 +69,9 @@ export default function Authentication() {
   let handleAuth = async () => {
     try {
       setLoading(true);
-      setErrors([]); // ✅ Clear errors on new attempt
+      setErrors([]);
 
-      // ✅ Validate before sending
+      // Validate before sending
       if (!validateForm()) {
         setLoading(false);
         return;
@@ -108,7 +109,7 @@ export default function Authentication() {
       }
     } catch (err) {
       let errorMessage = err?.response?.data?.message || err?.message || "An error occurred";
-      setErrors([errorMessage]); // ✅ Convert to array
+      setErrors([errorMessage]);
     } finally {
       setLoading(false);
     }
@@ -121,10 +122,10 @@ export default function Authentication() {
         backgroundImage: `url('${backgroundImage}')`,
       }}
     >
-      {/* ✅ GLASSMORPHIC FORM CARD */}
+      {/* GLASSMORPHIC FORM CARD */}
       <div className="auth-glass-card">
         <div className="auth-card-content">
-          {/* ✅ Logo - clickable to navigate to home "/" */}
+          {/* Logo - clickable to navigate to home "/" */}
           <div
             className="auth-logo"
             onClick={() => navigate('/')}
@@ -136,9 +137,7 @@ export default function Authentication() {
               }
             }}
           >
-            {/* Replace with your actual logo image */}
             <svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* <path d="M20 10L20 40L40 25Z" fill="#D97706" /> */}
               <text x="30" y="32" fontFamily="Arial, sans-serif" fontSize="25" fontWeight="800" fill="#1F2937">
                 ROOTCALL
               </text>
@@ -156,8 +155,9 @@ export default function Authentication() {
               className={`auth-toggle-btn ${formState === 0 ? "active" : ""}`}
               onClick={() => {
                 setFormState(0);
-                setErrors([]); // ✅ Clear errors
+                setErrors([]);
                 setName("");
+                setShowPassword(false);
               }}
               type="button"
             >
@@ -167,15 +167,14 @@ export default function Authentication() {
               className={`auth-toggle-btn ${formState === 1 ? "active" : ""}`}
               onClick={() => {
                 setFormState(1);
-                setErrors([]); // ✅ Clear errors
+                setErrors([]);
+                setShowPassword(false);
               }}
               type="button"
             >
               Sign Up
             </button>
           </div>
-
-          
 
           {/* Form Fields */}
           <form className="auth-form" onSubmit={(e) => { e.preventDefault(); handleAuth(); }}>
@@ -200,7 +199,7 @@ export default function Authentication() {
             <div className="auth-form-group">
               <input
                 type="text"
-                placeholder="Username "
+                placeholder="Username"
                 id="username"
                 name="username"
                 value={username}
@@ -211,32 +210,46 @@ export default function Authentication() {
               />
             </div>
 
-            {/* Password field */}
+            {/* Password field with toggle visibility */}
             <div className="auth-form-group">
-              <input
-                type="password"
-                placeholder="Password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`auth-input ${errors.some(e => e.includes("Password")) ? "error" : ""}`}
-                required
-              />
+              <div className="auth-password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`auth-input auth-password-input ${errors.some(e => e.includes("Password")) ? "error" : ""}`}
+                  required
+                />
+                <button
+                  type="button"
+                  className="auth-password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
+                </button>
+              </div>
             </div>
 
-            {/* ✅ NEW: Error Messages as Bullet Points */}
-          {errors.length > 0 && (
-            <div className="auth-error-box">
-              <ul className="auth-error-list">
-                {errors.map((error, index) => (
-                  <li key={index} className="auth-error-item">
-                    {error}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            {/* Error Messages as Bullet Points */}
+            {errors.length > 0 && (
+              <div className="auth-error-box">
+                <ul className="auth-error-list">
+                  {errors.map((error, index) => (
+                    <li key={index} className="auth-error-item">
+                      {error}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Login/Register Button */}
             <button
