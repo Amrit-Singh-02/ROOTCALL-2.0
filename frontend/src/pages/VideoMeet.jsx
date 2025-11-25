@@ -968,17 +968,16 @@ let connections = {};
 const peerConfigConnections = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:stun2.l.google.com:19302' },
+    // Metered TURN (free, reliable)
     {
-      urls: 'turn:openrelay.metered.ca:80',
-      username: 'openrelayproject',
-      credential: 'openrelayproject',
+      urls: 'turn:a.relay.metered.ca:80',
+      username: 'e46a77e9726c300d61666f65',
+      credential: 'x6VUz8KdK1U5RkY1',
     },
     {
-      urls: 'turn:openrelay.metered.ca:443',
-      username: 'openrelayproject',
-      credential: 'openrelayproject',
+      urls: 'turn:a.relay.metered.ca:443',
+      username: 'e46a77e9726c300d61666f65',
+      credential: 'x6VUz8KdK1U5RkY1',
     },
   ],
 };
