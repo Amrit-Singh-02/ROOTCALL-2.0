@@ -1011,7 +1011,7 @@ const VideoMeet = () => {
         return;
       }
 
-      const url = `${domain}/api/v1/turn/credentials?apiKey=${apiKey}`;
+      const url = `https://${domain}/api/v1/turn/credentials?apiKey=${apiKey}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error('Metered response not ok: ' + res.status);
       const iceServers = await res.json();
