@@ -968,9 +968,15 @@ let connections = {};
 const peerConfigConnections = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
-    // Metered TURN (free, reliable)
+    { urls: 'stun:stun1.l.google.com:19302' },
+    // Metered.ca TURN servers (free tier)
     {
       urls: 'turn:a.relay.metered.ca:80',
+      username: 'e46a77e9726c300d61666f65',
+      credential: 'x6VUz8KdK1U5RkY1',
+    },
+    {
+      urls: 'turn:a.relay.metered.ca:80?transport=tcp',
       username: 'e46a77e9726c300d61666f65',
       credential: 'x6VUz8KdK1U5RkY1',
     },
@@ -979,7 +985,13 @@ const peerConfigConnections = {
       username: 'e46a77e9726c300d61666f65',
       credential: 'x6VUz8KdK1U5RkY1',
     },
+    {
+      urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+      username: 'e46a77e9726c300d61666f65',
+      credential: 'x6VUz8KdK1U5RkY1',
+    },
   ],
+  iceCandidatePoolSize: 10,
 };
 
 const VideoMeet = () => {
