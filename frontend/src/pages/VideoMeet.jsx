@@ -3,7 +3,7 @@
 // import io from 'socket.io-client';
 // import '../styles/videomeet.css';
 
-// const server_url = process.env.REACT_APP_BACKEND_URL || 'https://rootcall-backend.onrender.com';
+// const server_url = process.env.REACT_APP_BACKEND_URL || 'https://rootcall-b.onrender.com';
 // let connections = {};
 
 // // const peerConfigConnections = {
@@ -957,7 +957,6 @@
 // export default VideoMeet;
 
 
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
@@ -1019,20 +1018,6 @@ const VideoMeet = () => {
       if (navigator.mediaDevices.getDisplayMedia) {
         setScreenAvailable(true);
       }
-
-      // Get initial stream for preview
-      if (videoAvailable || audioAvailable) {
-        const userMediaStream = await navigator.mediaDevices.getUserMedia({
-          video: videoAvailable,
-          audio: audioAvailable,
-        }).catch(() => null);
-        if (userMediaStream) {
-          window.localStream = userMediaStream;
-          if (localVideoRef.current) {
-            localVideoRef.current.srcObject = userMediaStream;
-          }
-        }
-      }
     } catch (err) {
       console.error('Permission error:', err);
     }
@@ -1056,31 +1041,22 @@ const VideoMeet = () => {
       localVideoRef.current.srcObject = stream;
     }
 
-    // Update all peer connections with new tracks
     Object.keys(connections).forEach((id) => {
       if (id === socketIdRef.current || !connections[id]) return;
       
+      const senders = connections[id].getSenders();
       stream.getTracks().forEach((track) => {
-        connections[id].addTrack(track, stream);
+        const sender = senders.find(s => s.track?.kind === track.kind);
+        if (sender) {
+          sender.replaceTrack(track);
+        } else {
+          connections[id].addTrack(track, stream);
+        }
       });
-
-      connections[id].createOffer()
-        .then((description) => {
-          connections[id].setLocalDescription(description)
-            .then(() => {
-              socketRef.current?.emit('signal', id, JSON.stringify({ 
-                sdp: connections[id].localDescription,
-                username: username
-              }));
-            });
-        })
-        .catch(err => console.error('Offer error:', err));
     });
 
-    // Handle track end
     stream.getTracks().forEach((track) => {
       track.onended = () => {
-        console.log('Track ended');
         if (video && track.kind === 'video') setVideo(false);
         if (audio && track.kind === 'audio') setAudio(false);
       };
@@ -1110,6 +1086,16 @@ const VideoMeet = () => {
         .getUserMedia({ video: video && videoAvailable, audio: audio && audioAvailable })
         .then(getUserMediaSuccess)
         .catch(err => console.error('getUserMedia error:', err));
+    } else {
+      try {
+        const blackSilence = new MediaStream([black(), silence()]);
+        window.localStream = blackSilence;
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = blackSilence;
+        }
+      } catch (e) {
+        console.error('Black/silence error:', e);
+      }
     }
   };
 
@@ -1122,6 +1108,17 @@ const VideoMeet = () => {
   const gotMessageFromServer = (fromId, message) => {
     try {
       const signal = JSON.parse(message);
+
+      // Store username if provided
+      if (signal.username && fromId !== socketIdRef.current) {
+        setParticipants((prev) => {
+          const exists = prev.find(p => p.id === fromId);
+          if (!exists) {
+            return [...prev, { id: fromId, username: signal.username }];
+          }
+          return prev;
+        });
+      }
 
       if (fromId !== socketIdRef.current) {
         if (signal.sdp && connections[fromId]) {
@@ -1139,7 +1136,8 @@ const VideoMeet = () => {
                           username: username
                         }));
                       });
-                  });
+                  })
+                  .catch(err => console.error('Answer error:', err));
               }
             })
             .catch(err => console.error('Remote description error:', err));
@@ -1175,8 +1173,10 @@ const VideoMeet = () => {
 
     socketRef.current.on('connect', () => {
       console.log('✅ Connected to socket server');
-      socketRef.current.emit('join-call', window.location.href);
       socketIdRef.current = socketRef.current.id;
+
+      // Emit join with username
+      socketRef.current.emit('join-call', window.location.href, username);
 
       // Add self as first participant
       setParticipants([{ id: socketIdRef.current, username: username }]);
@@ -1200,15 +1200,28 @@ const VideoMeet = () => {
         setParticipants((prev) => prev.filter((p) => p.id !== id));
       });
 
-      socketRef.current.on('user-joined', (id, clients) => {
-        console.log('👥 User joined:', id, 'Total clients:', clients?.length);
+      socketRef.current.on('user-joined', (id, clients, joiningUsername) => {
+        console.log('👥 User joined:', id, 'Username:', joiningUsername, 'Total clients:', clients?.length);
 
         if (!Array.isArray(clients)) {
           console.warn('Clients is not an array:', clients);
           return;
         }
 
+        // Add joining user to participants if not self
+        if (id !== socketIdRef.current && joiningUsername) {
+          setParticipants((prev) => {
+            const exists = prev.find(p => p.id === id);
+            if (!exists) {
+              return [...prev, { id, username: joiningUsername }];
+            }
+            return prev;
+          });
+        }
+
         clients.forEach((socketListId) => {
+          if (socketListId === socketIdRef.current) return;
+          
           if (connections[socketListId]) {
             console.log('Connection exists for:', socketListId);
             return;
@@ -1220,7 +1233,8 @@ const VideoMeet = () => {
           connections[socketListId].onicecandidate = (event) => {
             if (event.candidate) {
               socketRef.current?.emit('signal', socketListId, JSON.stringify({ 
-                ice: event.candidate 
+                ice: event.candidate,
+                username: username
               }));
             }
           };
@@ -1262,26 +1276,22 @@ const VideoMeet = () => {
               connections[socketListId].addTrack(track, blackSilence);
             });
           }
-        });
 
-        // Create offers from new user
-        if (id === socketIdRef.current) {
-          Object.keys(connections).forEach((id2) => {
-            if (id2 === socketIdRef.current || !connections[id2]) return;
-
-            connections[id2].createOffer()
+          // If this is the new user, send offers
+          if (id === socketIdRef.current) {
+            connections[socketListId].createOffer()
               .then((description) => {
-                connections[id2].setLocalDescription(description)
+                connections[socketListId].setLocalDescription(description)
                   .then(() => {
-                    socketRef.current?.emit('signal', id2, JSON.stringify({ 
-                      sdp: connections[id2].localDescription,
+                    socketRef.current?.emit('signal', socketListId, JSON.stringify({ 
+                      sdp: connections[socketListId].localDescription,
                       username: username
                     }));
                   });
               })
               .catch(err => console.error('Offer error:', err));
-          });
-        }
+          }
+        });
       });
 
       socketRef.current.on('connect_error', (error) => {
@@ -1302,6 +1312,10 @@ const VideoMeet = () => {
       return;
     }
     setUsernameError('');
+    
+    // Initialize local stream before connecting
+    getUserMedia();
+    
     setAskForUsername(false);
     connectToSocketServer();
   };
@@ -1334,20 +1348,13 @@ const VideoMeet = () => {
       Object.keys(connections).forEach((id) => {
         if (id === socketIdRef.current || !connections[id]) return;
         
+        const senders = connections[id].getSenders();
         stream.getTracks().forEach((track) => {
-          connections[id].addTrack(track, stream);
+          const sender = senders.find(s => s.track?.kind === track.kind);
+          if (sender) {
+            sender.replaceTrack(track);
+          }
         });
-
-        connections[id].createOffer()
-          .then((desc) => {
-            connections[id].setLocalDescription(desc)
-              .then(() => {
-                socketRef.current?.emit('signal', id, JSON.stringify({ 
-                  sdp: connections[id].localDescription,
-                  username: username
-                }));
-              });
-          });
       });
 
       stream.getTracks()[0].onended = () => {
@@ -1377,6 +1384,9 @@ const VideoMeet = () => {
     console.log('🛑 Ending call...');
     
     try {
+      if (window.localStream?.getTracks) {
+        window.localStream.getTracks().forEach((t) => t.stop());
+      }
       if (localVideoRef.current?.srcObject) {
         localVideoRef.current.srcObject.getTracks().forEach((t) => t.stop());
       }
@@ -1384,7 +1394,6 @@ const VideoMeet = () => {
       console.error('Track stop error:', e);
     }
 
-    // Close all connections
     Object.keys(connections).forEach((id) => {
       if (connections[id]) {
         connections[id].close();
@@ -1392,12 +1401,10 @@ const VideoMeet = () => {
       }
     });
 
-    // Disconnect socket
     if (socketRef.current) {
       socketRef.current.disconnect();
     }
 
-    // Reset state and navigate
     setVideos([]);
     setParticipants([]);
     setMessages([]);
