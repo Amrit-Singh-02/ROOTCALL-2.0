@@ -4,7 +4,7 @@ const userSchema = new Schema({
     name: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true }
-    // REMOVED: token field - not needed for JWT cookies
+    
 });
 
 const User = mongoose.model("User", userSchema);
